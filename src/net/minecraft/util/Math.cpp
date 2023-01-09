@@ -1,7 +1,6 @@
 #include <src/com/mojang/math/Constants.h>
 #include <src/net/minecraft/util/Math.h>
 #include <math.h>
-#include <array>
 #include <random>
 
 float Sin(float input){
@@ -149,4 +148,14 @@ double nextDouble(double min, double max) {
         return min;
     }
     return rand() * (max - min) + min;
+}
+ double average(std::vector<long> input) {
+    long sum = 0L;
+
+    for (size_t i = 0; i < input.size(); i++)
+    {
+        sum += input[i];
+    }
+
+    return (double)sum / (double)input.size();
 }

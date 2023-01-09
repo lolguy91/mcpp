@@ -5,6 +5,8 @@
         "*.tcc": "cpp",
         "cstddef": "cpp",
         "limits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }
