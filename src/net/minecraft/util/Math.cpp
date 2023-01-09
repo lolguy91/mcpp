@@ -2,6 +2,7 @@
 #include <src/net/minecraft/util/Math.h>
 #include <math.h>
 #include <random>
+#include <iostream>
 
 float Sin(float input){
     return sin(input);
@@ -315,4 +316,290 @@ double inverseLerp(double d, double d2, double d3) {
 
 float inverseLerp(float f, float f2, float f3) {
     return (f - f2) / (f3 - f2);
+}
+//bool rayIntersectsAABB(Vec3 vec3, Vec3 vec32, AABB aABB) {
+//    double d = (aABB.minX + aABB.maxX) * 0.5;
+//    double d2 = (aABB.maxX - aABB.minX) * 0.5;
+//    double d3 = vec3.x - d;
+//    if (Math.abs(d3) > d2 && d3 * vec32.x >= 0.0) {
+//        return false;
+//    }
+//    double d4 = (aABB.minY + aABB.maxY) * 0.5;
+//    double d5 = (aABB.maxY - aABB.minY) * 0.5;
+//    double d6 = vec3.y - d4;
+//    if (Math.abs(d6) > d5 && d6 * vec32.y >= 0.0) {
+//        return false;
+//    }
+//    double d7 = (aABB.minZ + aABB.maxZ) * 0.5;
+//    double d8 = (aABB.maxZ - aABB.minZ) * 0.5;
+//    double d9 = vec3.z - d7;
+//    if (Math.abs(d9) > d8 && d9 * vec32.z >= 0.0) {
+//        return false;
+//    }
+//    double d10 = Math.abs(vec32.x);
+//    double d11 = Math.abs(vec32.y);
+//    double d12 = Math.abs(vec32.z);
+//    double d13 = vec32.y * d9 - vec32.z * d6;
+//    if (Math.abs(d13) > d5 * d12 + d8 * d11) {
+//        return false;
+//    }
+//    d13 = vec32.z * d3 - vec32.x * d9;
+//    if (Math.abs(d13) > d2 * d12 + d8 * d10) {
+//        return false;
+//    }
+//    d13 = vec32.x * d6 - vec32.y * d3;
+//    return Math.abs(d13) < d2 * d11 + d5 * d10;
+//}
+double atan2(double d, double d2) {
+    double d3;
+    bool bl;
+    bool bl2;
+    bool bl3;
+    double d4 = d2 * d2 + d * d;
+    if (isnan(d4)) {
+        return NAN;
+    }
+    bool bl4 = bl3 = d < 0.0;
+    if (bl3) {
+        d = -d;
+    }
+    bool bl5 = bl2 = d2 < 0.0;
+    if (bl2) {
+        d2 = -d2;
+    }
+    bool bl6 = bl = d > d2;
+    if (bl) {
+        d3 = d2;
+        d2 = d;
+        d = d3;
+    }
+    d3 = fastInvSqrt(d4);
+    double d5 = FRAC_BIAS + (d *= d3);
+    int n = (int) *((long*)&d5);
+    double d6 = asin(n);
+    double d7 = cos(n);
+    double d8 = d5 - FRAC_BIAS;
+    double d9 = d * d7 - (d2 *= d3) * d8;
+    double d10 = (6.0 + d9 * d9) * d9 * 0.16666666666666666;
+    double d11 = d6 + d10;
+    if (bl) {
+        d11 = 1.5707963267948966 - d11;
+    }
+    if (bl2) {
+        d11 = PI - d11;
+    }
+    if (bl3) {
+        d11 = -d11;
+    }
+    return d11;
+}
+
+float fastInvSqrt(float f) {
+    float f2 = 0.5f * f;
+    int n =  *((int*)&f);
+    n = 1597463007 - (n >> 1);
+    f =  *((float*)&n);
+    f *= 1.5f - f2 * f * f;
+    return f;
+}
+double fastInvSqrt(double d) {
+    double d2 = 0.5 * d;
+    long l = *((long*)&d);
+    l = 6910469410427058090L - (l >> 1);
+    d = *((double*)&l);
+    d *= 1.5 - d2 * d * d;
+    return d;
+}
+float fastInvCubeRoot(float f) {
+    int n = *((int*)&f);
+    n = 1419967116 - n / 3;
+    float f2 = *((float*)&n);
+    f2 = 0.6666667f * f2 + 1.0f / (3.0f * f2 * f2 * f);
+    f2 = 0.6666667f * f2 + 1.0f / (3.0f * f2 * f2 * f);
+    return f2;
+}
+
+int hsvToRgb(float f, float f2, float f3) {
+    float f4;
+    float f5;
+    int n = (int)(f * 6.0f) % 6;
+    float f6 = f * 6.0f - (float)n;
+    float f7 = f3 * (1.0f - f2);
+    float f8 = f3 * (1.0f - f6 * f2);
+    float f9 = f3 * (1.0f - (1.0f - f6) * f2);
+    float f10 = 0;
+    switch (n) {
+        case 0:
+            f5 = f3;
+            f4 = f9;
+            f10 = f7;
+            break;
+        
+        case 1:
+            f5 = f8;
+            f4 = f3;
+            f10 = f7;
+            break;
+        
+        case 2:
+            f5 = f7;
+            f4 = f3;
+            f10 = f9;
+            break;
+        
+        case 3:
+            f5 = f7;
+            f4 = f8;
+            f10 = f3;
+            break;
+        
+        case 4:
+            f5 = f9;
+            f4 = f7;
+            f10 = f3;
+            break;
+        
+        case 5:
+            f5 = f3;
+            f4 = f7;
+            f10 = f8;
+            break;
+        
+        default :
+        std::cout << "ERROR: Something went wrong when converting from HSV to RGB. Input was " << f << ", " << f2 << ", " << f3;
+        __glibcxx_assert(false);
+    };
+    int n2 = Clamp((int)(f5 * 255.0f), 0, 255);
+    int n3 = Clamp((int)(f4 * 255.0f), 0, 255);
+    int n4 = Clamp((int)(f10 * 255.0f), 0, 255);
+    return n2 << 16 | n3 << 8 | n4;
+}
+
+int murmurHash3Mixer(int n) {
+    n ^= n >> 16;
+    n *= -2048144789;
+    n ^= n >> 13;
+    n *= -1028477387;
+    n ^= n >> 16;
+    return n;
+}
+
+long murmurHash3Mixer(long l) {
+    l ^= l >> 33;
+    l *= -49064778989728563L;
+    l ^= l >> 33;
+    l *= -4265267296055464877L;
+    l ^= l >> 33;
+    return l;
+}
+
+std::vector<double> cumulativeSum(std::vector<double> arrd) {
+    double d = 0.0;
+    for (double d2 : arrd) {
+        d += d2;
+    }
+    int n = 0;
+    while (n < arrd.size()) {
+        int n2 = n++;
+        arrd[n2] = arrd[n2] / d;
+    }
+    for (n = 0; n < arrd.size(); ++n) {
+        arrd[n] = (n == 0 ? 0.0 : arrd[n - 1]) + arrd[n];
+    }
+    return arrd;
+}
+
+ int getRandomForDistributionIntegral(std::vector<double> arrd) {
+    double d = rand();
+    for (int i = 0; i < arrd.size(); ++i) {
+        if (!(d < arrd[i])) continue;
+        return i;
+    }
+    return arrd.size();
+}
+
+int max(int input, int max) {
+    if (input > max) {
+        return max;
+    }
+    return input;
+}
+
+std::vector<double> binNormalDistribution(double d, double d2, double d3, int n, int n2) {
+    std::vector<double> arrd = std::vector<double>(n2 - n + 1);
+    int n3 = 0;
+    for (int i = n; i <= n2; ++i) {
+        arrd[n3] = max(0.0, d * exp(-((double)i - d3) * ((double)i - d3) / (2.0 * d2 * d2)));
+        ++n3;
+    }
+    return arrd;
+}
+
+std::vector<double> binBiModalNormalDistribution(double d, double d2, double d3, double d4, double d5, double d6, int n, int n2) {
+    std::vector<double> arrd = std::vector<double>(n2 - n + 1);
+    int n3 = 0;
+    for (int i = n; i <= n2; ++i) {
+        arrd[n3] = max(0.0, d * exp(-((double)i - d3) * ((double)i - d3) / (2.0 * d2 * d2)) + d4 * exp(-((double)i - d6) * ((double)i - d6) / (2.0 * d5 * d5)));
+        ++n3;
+    }
+    return arrd;
+}
+std::vector<double> binLogDistribution(double d, double d2, int n, int n2) {
+    std::vector<double> arrd = std::vector<double>(n2 - n + 1);
+    int n3 = 0;
+    for (int i = n; i <= n2; ++i) {
+        arrd[n3] = max(d * log(i) + d2, 0.0);
+        ++n3;
+    }
+    return arrd;
+}
+
+//int binarySearch(int n, int n2, IntPredicate intPredicate) {
+//    int n3 = n2 - n;
+//    while (n3 > 0) {
+//        int n4 = n3 / 2;
+//        int n5 = n + n4;
+//        if (intPredicate.test(n5)) {
+//            n3 = n4;
+//            continue;
+//        }
+//        n = n5 + 1;
+//        n3 -= n4 + 1;
+//    }
+//    return n;
+//}
+
+float Lerp(float f, float f2, float f3) {
+    return f2 + f * (f3 - f2);
+}
+
+double Lerp(double d, double d2, double d3) {
+    return d2 + d * (d3 - d2);
+}
+
+double Lerp2(double d, double d2, double d3, double d4, double d5, double d6) {
+    return Lerp(d2, Lerp(d, d3, d4), Lerp(d, d5, d6));
+}
+
+double Lerp3(double d, double d2, double d3, double d4, double d5, double d6, double d7, double d8, double d9, double d10, double d11) {
+    return Lerp(d3, Lerp2(d, d2, d4, d5, d6, d7), Lerp2(d, d2, d8, d9, d10, d11));
+}
+
+float catmullrom(float f, float f2, float f3, float f4, float f5) {
+    return 0.5f * (2.0f * f3 + (f4 - f2) * f + (2.0f * f2 - 5.0f * f3 + 4.0f * f4 - f5) * f * f + (3.0f * f3 - f2 - 3.0f * f4 + f5) * f * f * f);
+}
+
+double smoothstep(double d) {
+    return d * d * d * (d * (d * 6.0 - 15.0) + 10.0);
+}
+
+double smoothstepDerivative(double d) {
+    return 30.0 * d * d * (d - 1.0) * (d - 1.0);
+}
+
+int sign(double d) {
+    if (d == 0.0) {
+        return 0;
+    }
+    return d > 0.0 ? 1 : -1;
 }
