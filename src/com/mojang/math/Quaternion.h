@@ -11,11 +11,11 @@ public:
     Quaternion(Vector3f vector3f, float f, bool bl);
     Quaternion(float f, float f2, float f3, bool bl);
     Quaternion fromYXZ(float f, float f2, float f3);
-    //public static Quaternion fromXYZDegrees(Vector3f vector3f);
-    //public static Quaternion fromXYZ(Vector3f vector3f);
+    Quaternion fromXYZDegrees(Vector3f vector3f);
+    Quaternion fromXYZ(Vector3f vector3f);
     Quaternion fromXYZ(float f, float f2, float f3);
-    //public Vector3f toXYZ();
-    //public Vector3f toXYZDegrees();
+    Vector3f toXYZ();
+    Vector3f toXYZDegrees();
     bool equals(Quaternion quaternion);
     int hashCode();
     void mul(Quaternion quaternion);

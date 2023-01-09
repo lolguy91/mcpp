@@ -9,9 +9,11 @@
         z = f3;
     }
 
-    //Vector3f(Vector4f vector4f) {
-    //    this(vector4f.x(), vector4f.y(), vector4f.z());
-    //}
+    Vector3f::Vector3f(Vector4f vector4f) {
+        x = vector4f.x;
+        y = vector4f.y;
+        z = vector4f.z;
+    }
 
     //Vector3f(Vec3 vec3) {
     //    this((float)vec3.x, (float)vec3.y, (float)vec3.z);
@@ -28,7 +30,7 @@
     }
 
     int Vector3f::hashCode() {
-        int n =*((int*)&x);
+        int n = *((int*)&x);
         n = 31 * n + *((int*)&y);
         n = 31 * n + *((int*)&z);
         return n;
@@ -127,7 +129,7 @@
 
     void Vector3f::transform(Quaternion quaternion) {
         Quaternion quaternion2 = Quaternion(quaternion);
-        quaternion2.mul(new Quaternion(x, y, z, 0.0f));
+        quaternion2.mul(Quaternion(x, y, z, 0.0f));
         Quaternion quaternion3 = Quaternion(quaternion);
         quaternion3.conj();
         quaternion2.mul(quaternion3);
@@ -142,11 +144,11 @@
     }
 
     Quaternion Vector3f::rotation(float f) {
-        return Quaternion(this, f, false);
+        return Quaternion(*this, f, false);
     }
 
     Quaternion Vector3f::rotationDegrees(float f) {
-        return Quaternion(this, f, true);
+        return Quaternion(*this, f, true);
     }
 
     Vector3f Vector3f::copy() {

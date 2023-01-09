@@ -40,13 +40,14 @@ Quaternion::Quaternion(float f, float f2, float f3, bool bl) {
     k = f4 * f6 * f9 + f5 * f7 * f8;
     r = f5 * f7 * f9 - f4 * f6 * f8;
 }
-//public static Quaternion fromXYZDegrees(Vector3f vector3f) {
-//    return Quaternion.fromXYZ((float)Math.toRadians(vector3f.x()), (float)Math.toRadians(vector3f.y()), (float)Math.toRadians(vector3f.z()));
-//}
+Quaternion Quaternion::fromXYZDegrees(Vector3f vector3f) {
+    return fromXYZ((float)vector3f.x * DEG_TO_RAD, (float)vector3f.y * DEG_TO_RAD, (float)vector3f.z * DEG_TO_RAD);
+}
 
-//public static Quaternion fromXYZ(Vector3f vector3f) {
-//    return Quaternion.fromXYZ(vector3f.x(), vector3f.y(), vector3f.z());
-//}
+Quaternion Quaternion::fromXYZ(Vector3f vector3f) {
+    return fromXYZ(vector3f.x, vector3f.y, vector3f.z);
+}
+
 Quaternion Quaternion::fromXYZ(float f, float f2, float f3) {
     Quaternion quaternion = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
     quaternion.mul(Quaternion((float)sin(f / 2.0f), 0.0f, 0.0f, (float)cos(f / 2.0f)));
@@ -54,42 +55,28 @@ Quaternion Quaternion::fromXYZ(float f, float f2, float f3) {
     quaternion.mul(Quaternion(0.0f, 0.0f, (float)sin(f3 / 2.0f), (float)cos(f3 / 2.0f)));
     return quaternion;
 }
-//public Vector3f toXYZ() {
-//    float f = this.r() * this.r();
-//    float f2 = this.i() * this.i();
-//    float f3 = this.j() * this.j();
-//    float f4 = this.k() * this.k();
-//    float f5 = f + f2 + f3 + f4;
-//    float f6 = 2.0f * this.r() * this.i() - 2.0f * this.j() * this.k();
-//    float f7 = (float)Math.asin(f6 / f5);
-//    if (Math.abs(f6) > 0.999f * f5) {
-//        return new Vector3f(2.0f * (float)Math.atan2(this.i(), this.r()), f7, 0.0f);
-//    }
-//    return new Vector3f((float)Math.atan2(2.0f * this.j() * this.k() + 2.0f * this.i() * this.r(), f - f2 - f3 + f4), f7, (float)Math.atan2(2.0f * this.i() * this.j() + 2.0f * this.r() * this.k(), f + f2 - f3 - f4));
-//}
 
-//public Vector3f toXYZDegrees() {
-//    Vector3f vector3f = this.toXYZ();
-//    return new Vector3f((float)Math.toDegrees(vector3f.x()), (float)Math.toDegrees(vector3f.y()), (float)Math.toDegrees(vector3f.z()));
-//}
-//public Vector3f toYXZ() {
-//    float f = this.r() * this.r();
-//    float f2 = i * i;
-//    float f3 = j * j;
-//    float f4 = k * k;
-//    float f5 = f + f2 + f3 + f4;
-//    float f6 = 2.0f * r * i - 2.0f * j * k;
-//    float f7 = (float)asin(f6 / f5);
-//    if (abs(f6) > 0.999f * f5) {
-//        return Vector3f(f7, 2.0f * (float)atan2(j, r), 0.0f);
-//    }
-//    return new Vector3f(f7, (float)Math.atan2(2.0f * i * .k + 2.0f * j * r, f - f2 - f3 + f4), (float)Math.atan2(2.0f * this.i() * this.j() + 2.0f * this.r() * this.k(), f - f2 + f3 - f4));
-//}
 
-//public Vector3f toYXZDegrees() {
-//    Vector3f vector3f = toYXZ();
-//    return Vector3f((float)toDegrees(vector3f.x()), (float)toDegrees(vector3f.y()), (float)toDegrees(vector3f.z()));
-//}
+    
+
+Vector3f Quaternion::toXYZ() {
+    float f = r * r;
+    float f2 = i * i;
+    float f3 = j * j;
+    float f4 = k * k;
+    float f5 = f + f2 + f3 + f4;
+    float f6 = 2.0f * r * i - 2.0f * j * k;
+    float f7 = (float)asin(f6 / f5);
+    if (abs(f6) > 0.999f * f5) {
+        return Vector3f(f7, 2.0f * (float)atan2(j, r), 0.0f);
+    }
+    return Vector3f(f7, (float)atan2(2.0f * i * k + 2.0f * j * r, f - f2 - f3 + f4), (float)atan2(2.0f * i * j + 2.0f * r * k, f - f2 + f3 - f4));
+}
+
+Vector3f Quaternion::toXYZDegrees() {
+    Vector3f xyz = toXYZ();
+    return Vector3f((float)xyz.x * RAD_TO_DEG, (float)xyz.y * RAD_TO_DEG, (float)xyz.z * RAD_TO_DEG);
+}
 bool Quaternion::equals(Quaternion quaternion) {
     if (quaternion.i != i) {
         return false;
