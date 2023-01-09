@@ -101,26 +101,26 @@ double Clamp(double input, double min, double max) {
     return input;
 }
 
-double clampedLerp(double input, double min, double max) {
+double ClampedLerp(double input, double min, double max) {
     if (max < 0.0) {
         return input;
     }
     if (max > 1.0) {
         return min;
     }
-    return lerp(max, input, min);
+    return Lerp(max, input, min);
 }
 
-float clampedLerp(float input, float min, float max) {
+float ClampedLerp(float input, float min, float max) {
     if (max < 0.0f) {
         return input;
     }
     if (max > 1.0f) {
         return min;
     }
-    return lerp(max, input, min);
+    return Lerp(max, input, min);
 }
-double absMax(double d, double d2) {
+double AbsMax(double d, double d2) {
     if (d < 0.0) {
         d = -d;
     }
@@ -129,27 +129,27 @@ double absMax(double d, double d2) {
     }
     return d > d2 ? d : d2;
 }
-int nextInt(int min, int max) {
-    if (n >= max) {
-        return min;
-    }
-    return rand() * (max - min) + min;
-}
-
-float nextFloat(float min, float max) {
+int NextInt(int min, int max) {
     if (min >= max) {
         return min;
     }
     return rand() * (max - min) + min;
 }
 
-double nextDouble(double min, double max) {
+float NextFloat(float min, float max) {
     if (min >= max) {
         return min;
     }
     return rand() * (max - min) + min;
 }
- double average(std::vector<long> input) {
+
+double NextDouble(double min, double max) {
+    if (min >= max) {
+        return min;
+    }
+    return rand() * (max - min) + min;
+}
+ double Average(std::vector<long> input) {
     long sum = 0L;
 
     for (size_t i = 0; i < input.size(); i++)
