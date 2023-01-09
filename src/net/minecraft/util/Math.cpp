@@ -603,3 +603,135 @@ int sign(double d) {
     }
     return d > 0.0 ? 1 : -1;
 }
+
+float rotLerp(float f, float f2, float f3) {
+        return f2 + f * wrapDegrees(f3 - f2);
+}
+
+int min(int input, int min) {
+    if (input < min) {
+        return min;
+    }
+    return input;
+}
+
+float diffuseLight(float f, float f2, float f3) {
+    return min(f * f * 0.6f + f2 * f2 * ((3.0f + f2) / 4.0f) + f3 * f3 * 0.8f, 1.0f);
+}
+float rotlerp(float f, float f2, float f3) {
+    float f4;
+    for (f4 = f2 - f; f4 < -180.0f; f4 += 360.0f) {
+    }
+    while (f4 >= 180.0f) {
+        f4 -= 360.0f;
+    }
+    return f + f3 * f4;
+}
+float rotWrap(double d) {
+    while (d >= 180.0) {
+        d -= 360.0;
+    }
+    while (d < -180.0) {
+        d += 360.0;
+    }
+    return (float)d;
+}
+float triangleWave(float f, float f2) {
+    return (abs(modf(f,&f2) - f2 * 0.5f) - f2 * 0.25f) / (f2 * 0.25f);
+}
+
+double clampedMap(double d, double d2, double d3, double d4, double d5) {
+    return ClampedLerp(d4, d5, inverseLerp(d, d2, d3));
+}
+
+float clampedMap(float f, float f2, float f3, float f4, float f5) {
+    return ClampedLerp(f4, f5, inverseLerp(f, f2, f3));
+}
+
+double map(double d, double d2, double d3, double d4, double d5) {
+    return Lerp(inverseLerp(d, d2, d3), d4, d5);
+}
+
+float map(float f, float f2, float f3, float f4, float f5) {
+    return Lerp(inverseLerp(f, f2, f3), f4, f5);
+}
+
+double wobble(double d) {
+    srand(Floor(d * 3000.0));
+    return d + (2.0 * rand() - 1.0) * 1.0E-7 / 2.0;
+}
+
+int roundToward(int n, int n2) {
+    return positiveCeilDiv(n, n2) * n2;
+}
+
+int positiveCeilDiv(int n, int n2) {
+    return -Floor((float)(-n / n2));
+}
+
+int randomBetweenInclusive(int n, int n2) {
+    return rand() * (n2 - n) + n;
+}
+
+float randomBetween(float f, float f2) {
+    return rand() * (f2 - f) + f;
+}
+
+float normal(float f, float f2) {
+    return f + (float)rand() * f2;
+}
+
+double lengthSquared(double d, double d2) {
+    return d * d + d2 * d2;
+}
+
+double length(double d, double d2) {
+    return sqrt(lengthSquared(d, d2));
+}
+double lengthSquared(double d, double d2, double d3) {
+    return d * d + d2 * d2 + d3 * d3;
+}
+double length(double d, double d2, double d3) {
+    return sqrt(lengthSquared(d, d2, d3));
+}
+
+int quantize(double d, int n) {
+    return floor(d / (double)n) * n;
+}
+//IntStream outFromOrigin(int n, int n2, int n3) {
+//    return outFromOrigin(n, n2, n3, 1);
+//}
+//IntStream outFromOrigin(int n, int n2, int n3, int n6) {
+//    if (n2 > n3) {
+//        throw new IllegalArgumentException("upperbound %d expected to be > lowerBound %d".formatted(new Object[]{n3, n2}));
+//    }
+//    if (n6 < 1) {
+//        throw new IllegalArgumentException("steps expected to be >= 1, was %d".formatted(new Object[]{n6}));
+//    }
+//    if (n < n2 || n > n3) {
+//        return IntStream.empty();
+//    }
+//    return IntStream.iterate(n, n4 -> {
+//        int n5 = Math.abs(n - n4);
+//        return n - n5 >= n2 || n + n5 <= n3;
+//    }, n5 -> {
+//        int n6;
+//        boolean bl;
+//        boolean bl2 = n5 <= n;
+//        int n7 = Math.abs(n - n5);
+//        boolean bl3 = bl = n + n7 + n6 <= n3;
+//        if (!(bl2 && bl || (n6 = n - n7 - (bl2 ? n6 : 0)) < n2)) {
+//            return n6;
+//        }
+//        return n + n7 + n6;
+//    });
+//}
+//
+//static {
+//    for (int i = 0; i < 257; ++i) {
+//        double d = (double)i / 256.0;
+//        double d2 = Math.asin(d);
+//        Mth.COS_TAB[i] = Math.cos(d2);
+//        Mth.ASIN_TAB[i] = d2;
+//    }
+//}

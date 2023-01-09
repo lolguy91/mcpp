@@ -74,5 +74,26 @@ float                   catmullrom(float f, float f2, float f3, float f4, float 
 double                  smoothstep(double d);
 double                  smoothstepDerivative(double d);
 int                     sign(double d);
+float                   rotLerp(float f, float f2, float f3);
+int                     min(int input, int min);
+float                   diffuseLight(float f, float f2, float f3);
+float                   rotlerp(float f, float f2, float f3);
+float                   rotWrap(double d);
+float                   triangleWave(float f, float f2);
+double                  clampedMap(double d, double d2, double d3, double d4, double d5);
+float                   clampedMap(float f, float f2, float f3, float f4, float f5);
+double                  map(double d, double d2, double d3, double d4, double d5);
+float                   map(float f, float f2, float f3, float f4, float f5);
+double                  wobble(double d);
+int                     roundToward(int n, int n2);
+int                     positiveCeilDiv(int n, int n2);
+int                     randomBetweenInclusive(int n, int n2);
+float                   randomBetween(float f, float f2);
+float                   normal(float f, float f2);
+double                  lengthSquared(double d, double d2);
+double                  length(double d, double d2);
+double                  lengthSquared(double d, double d2, double d3);
+double                  length(double d, double d2, double d3;
+int                     quantize(double d, int n);
 
 #endif // __MATH_H__
