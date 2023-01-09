@@ -13,16 +13,16 @@ Quaternion::Quaternion(float f, float f2, float f3, float f4) {
         r = f4;
 }
 
-//Quaternion::Quaternion(Vector3f vector3f, float f, bool bl) {
-//    if (bl) {
-//        f *= (float)PI / 180;
-//    }
-//    float f2 = sin(f / 2.0f);
-//    i = vector3f.x() * f2;
-//    j = vector3f.y() * f2;
-//    k = vector3f.z() * f2;
-//    r = cos(f / 2.0f);
-//}
+Quaternion::Quaternion(Vector3f vector3f, float f, bool bl) {
+    if (bl) {
+        f *= (float)PI / 180;
+    }
+    float f2 = sin(f / 2.0f);
+    i = vector3f.x * f2;
+    j = vector3f.y * f2;
+    k = vector3f.z * f2;
+    r = cos(f / 2.0f);
+}
 Quaternion::Quaternion(float f, float f2, float f3, bool bl) {
     if (bl) {
         f *= (float)PI / 180;
