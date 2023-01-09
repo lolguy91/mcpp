@@ -159,3 +159,160 @@ double NextDouble(double min, double max) {
 
     return (double)sum / (double)input.size();
 }
+bool Equal(float f, float f2) {
+    return abs(f2 - f) < 1.0E-5f;
+}
+
+bool Equal(double d, double d2) {
+    return abs(d2 - d) < (double)1.0E-5f;
+}
+
+int PositiveModulo(int n, int n2) {
+    return n % n2;
+}
+
+float PositiveModulo(float f, float f2) {
+    return modf((modf(f,&f2) + f2), &f2);
+}
+
+double PositiveModulo(double d, double d2) {
+    return modf((modf(d,&d2) + d2), &d2);
+}
+
+static int wrapDegrees(int n) {
+    int n2 = n % 360;
+    if (n2 >= 180) {
+        n2 -= 360;
+    }
+    if (n2 < -180) {
+        n2 += 360;
+    }
+    return n2;
+}
+
+float wrapDegrees(float f) {
+    float tsy = 360.0f;
+    float f2 = modf(f,&tsy);
+    if (f2 >= 180.0f) {
+        f2 -= 360.0f;
+    }
+    if (f2 < -180.0f) {
+        f2 += 360.0f;
+    }
+    return f2;
+}
+
+double wrapDegrees(double d) {
+    double tsy = 360.0f;
+    double d2 = modf(d,&tsy);
+    if (d2 >= 180.0) {
+        d2 -= 360.0;
+    }
+    if (d2 < -180.0) {
+        d2 += 360.0;
+    }
+    return d2;
+}
+float degreesDifference(float f, float f2) {
+    return wrapDegrees(f2 - f);
+}
+float degreesDifferenceAbs(float f, float f2) {
+    return abs(degreesDifference(f, f2));
+}
+float rotateIfNecessary(float f, float f2, float f3) {
+    float f4 = degreesDifference(f, f2);
+    float f5 = Clamp(f4, -f3, f3);
+    return f2 - f5;
+}
+
+float approach(float f, float f2, float f3) {
+    f3 = abs(f3);
+    if (f < f2) {
+        return Clamp(f + f3, f, f2);
+    }
+    return Clamp(f - f3, f2, f);
+}
+
+float approachDegrees(float f, float f2, float f3) {
+    float f4 = degreesDifference(f, f2);
+    return approach(f, f + f4, f3);
+}
+
+int smallestEncompassingPowerOfTwo(int n) {
+    int n2 = n - 1;
+    n2 |= n2 >> 1;
+    n2 |= n2 >> 2;
+    n2 |= n2 >> 4;
+    n2 |= n2 >> 8;
+    n2 |= n2 >> 16;
+    return n2 + 1;
+}
+
+bool isPowerOfTwo(int n) {
+    return n != 0 && (n & n - 1) == 0;
+}
+
+int ceillog2(int n) {
+    n = isPowerOfTwo(n) ? n : smallestEncompassingPowerOfTwo(n);
+    return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)n * 125613361L >> 27) & 0x1F];
+}
+
+int log2(int n) {
+    return ceillog2(n) - (isPowerOfTwo(n) ? 0 : 1);
+}
+
+int color(float f, float f2, float f3) {
+    return color(Floor(f * 255.0f),Floor(f2 * 255.0f),Floor(f3 * 255.0f));
+}
+
+int color(int n, int n2, int n3) {
+    int n4 = n;
+    n4 = (n4 << 8) + n2;
+    n4 = (n4 << 8) + n3;
+    return n4;
+}
+
+int colorMultiply(int n, int n2) {
+    int n3 = (n & 0xFF0000) >> 16;
+    int n4 = (n2 & 0xFF0000) >> 16;
+    int n5 = (n & 0xFF00) >> 8;
+    int n6 = (n2 & 0xFF00) >> 8;
+    int n7 = (n & 0xFF) >> 0;
+    int n8 = (n2 & 0xFF) >> 0;
+    int n9 = (int)((float)n3 * (float)n4 / 255.0f);
+    int n10 = (int)((float)n5 * (float)n6 / 255.0f);
+    int n11 = (int)((float)n7 * (float)n8 / 255.0f);
+    return n & 0xFF000000 | n9 << 16 | n10 << 8 | n11;
+}
+
+int colorMultiply(int n, float f, float f2, float f3) {
+    int n2 = (n & 0xFF0000) >> 16;
+    int n3 = (n & 0xFF00) >> 8;
+    int n4 = (n & 0xFF) >> 0;
+    int n5 = (int)((float)n2 * f);
+    int n6 = (int)((float)n3 * f2);
+    int n7 = (int)((float)n4 * f3);
+    return n & 0xFF000000 | n5 << 16 | n6 << 8 | n7;
+}
+
+float frac(float f) {
+    return f - (float)Floor(f);
+}
+
+double frac(double d) {
+    return d - (double)Lfloor(d);
+}
+
+long getSeed(int n, int n2, int n3) {
+    long l = (long)(n * 3129871) ^ (long)n3 * 116129781L ^ (long)n2;
+    l = l * l * 42317861L + l * 11L;
+    return l >> 16;
+}
+
+double inverseLerp(double d, double d2, double d3) {
+    return (d - d2) / (d3 - d2);
+}
+
+float inverseLerp(float f, float f2, float f3) {
+    return (f - f2) / (f3 - f2);
+}
