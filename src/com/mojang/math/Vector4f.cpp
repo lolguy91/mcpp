@@ -115,3 +115,8 @@
         z = z * f2 + vector4f.z * f;
         w = w * f2 + vector4f.w * f;
     }
+    Vector4f::Vector4f()
+    {
+        
+    }
+    

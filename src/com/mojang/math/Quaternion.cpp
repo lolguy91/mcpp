@@ -148,3 +148,7 @@ void Quaternion::normalize() {
 Quaternion Quaternion::copy() {
     return Quaternion(i,j,k,r);
 }
+Quaternion::Quaternion()
+{
+    
+}

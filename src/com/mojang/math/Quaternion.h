@@ -7,6 +7,7 @@ public:
     float j;
     float k;
     float r;
+    Quaternion();
     Quaternion(float f, float f2, float f3, float f4);
     Quaternion(Vector3f vector3f, float f, bool bl);
     Quaternion(float f, float f2, float f3, bool bl);

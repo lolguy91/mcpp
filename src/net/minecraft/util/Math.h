@@ -93,7 +93,7 @@ float                   normal(float f, float f2);
 double                  lengthSquared(double d, double d2);
 double                  length(double d, double d2);
 double                  lengthSquared(double d, double d2, double d3);
-double                  length(double d, double d2, double d3;
+double                  length(double d, double d2, double d3);
 int                     quantize(double d, int n);
 
 #endif // __MATH_H__

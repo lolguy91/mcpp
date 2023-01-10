@@ -154,3 +154,8 @@
     Vector3f Vector3f::copy() {
         return Vector3f(x, y, z);
     }
+    Vector3f::Vector3f()
+    {
+        
+    }
+    
