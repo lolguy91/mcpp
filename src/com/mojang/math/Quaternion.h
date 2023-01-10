@@ -1,5 +1,6 @@
 #ifndef __QUATERNION_H__
 #define __QUATERNION_H__
+
 #include <src/com/mojang/math/Vector3f.h>
 class Quaternion {
 public:
@@ -11,8 +12,8 @@ public:
     Quaternion(float f, float f2, float f3, float f4);
     Quaternion(Vector3f vector3f, float f, bool bl);
     Quaternion(float f, float f2, float f3, bool bl);
-    Quaternion fromYXZ(float f, float f2, float f3);
     Quaternion fromXYZDegrees(Vector3f vector3f);
+    Quaternion fromXYZ(float f, float f2, float f3);
     Quaternion fromXYZ(Vector3f vector3f);
     Vector3f toXYZ();
     Vector3f toXYZDegrees();

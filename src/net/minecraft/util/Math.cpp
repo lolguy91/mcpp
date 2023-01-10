@@ -350,49 +350,6 @@ float inverseLerp(float f, float f2, float f3) {
 //    d13 = vec32.x * d6 - vec32.y * d3;
 //    return Math.abs(d13) < d2 * d11 + d5 * d10;
 //}
-double atan2(double d, double d2) {
-    double d3;
-    bool bl;
-    bool bl2;
-    bool bl3;
-    double d4 = d2 * d2 + d * d;
-    if (isnan(d4)) {
-        return NAN;
-    }
-    bool bl4 = bl3 = d < 0.0;
-    if (bl3) {
-        d = -d;
-    }
-    bool bl5 = bl2 = d2 < 0.0;
-    if (bl2) {
-        d2 = -d2;
-    }
-    bool bl6 = bl = d > d2;
-    if (bl) {
-        d3 = d2;
-        d2 = d;
-        d = d3;
-    }
-    d3 = fastInvSqrt(d4);
-    double d5 = FRAC_BIAS + (d *= d3);
-    int n = (int) *((long*)&d5);
-    double d6 = asin(n);
-    double d7 = cos(n);
-    double d8 = d5 - FRAC_BIAS;
-    double d9 = d * d7 - (d2 *= d3) * d8;
-    double d10 = (6.0 + d9 * d9) * d9 * 0.16666666666666666;
-    double d11 = d6 + d10;
-    if (bl) {
-        d11 = 1.5707963267948966 - d11;
-    }
-    if (bl2) {
-        d11 = PI - d11;
-    }
-    if (bl3) {
-        d11 = -d11;
-    }
-    return d11;
-}
 
 float fastInvSqrt(float f) {
     float f2 = 0.5f * f;

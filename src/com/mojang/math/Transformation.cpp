@@ -1,3 +1,6 @@
+    #include <src/com/mojang/math/Quaternion.h>
+    #include <src/com/mojang/math/Matrix4f.h>
+    #include <src/com/mojang/math/Matrix3f.h>
     #include <src/com/mojang/math/Transformation.h>
     
     Transformation::Transformation(Matrix4f matrix4f) {

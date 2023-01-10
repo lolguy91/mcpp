@@ -1,6 +1,9 @@
-#include <src/com/mojang/math/Vector4f.h>
-#include <src/com/mojang/math/Constants.h>
-#include <src/net/minecraft/util/Math.h>
+    
+    #include <src/com/mojang/math/Vector3f.h>
+    #include <src/com/mojang/math/Quaternion.h>
+    #include <src/com/mojang/math/Vector4f.h>
+    #include <src/com/mojang/math/Constants.h>
+    #include <src/net/minecraft/util/Math.h>
 
     Vector4f::Vector4f(float f, float f2, float f3, float f4) {
         x = f;
@@ -9,7 +12,7 @@
         w = f4;
     }
 
-    Vector4f::Vector4f(Vector3f vector3f) {
+    Vector4f::Vector4f(Vector3f const& vector3f) {
         x = vector3f.x;
         y = vector3f.y;
         z = vector3f.z;

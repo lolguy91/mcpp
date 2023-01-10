@@ -45,20 +45,20 @@ Quaternion::Quaternion(float f, float f2, float f3, bool bl) {
 
 Quaternion Quaternion::fromXYZDegrees(Vector3f vector3f)
 {
-    return fromXYZ((float)vector3f.x * DEG_TO_RAD, (float)vector3f.y * DEG_TO_RAD, (float)vector3f.z * DEG_TO_RAD);
+    return fromXYZ(vector3f.x * DEG_TO_RAD,vector3f.y * DEG_TO_RAD,vector3f.z * DEG_TO_RAD);
 }
 
-Quaternion Quaternion::fromXYZ(Vector3f vector3f) {
-    return fromXYZ(vector3f.x, vector3f.y, vector3f.z);
-}
-
-Quaternion Quaternion::fromYXZ(float f, float f2, float f3) {
+Quaternion Quaternion::fromXYZ(float f, float f2, float f3) {
     Quaternion quaternion = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
     quaternion.mul(Quaternion((float)sin(f / 2.0f), 0.0f, 0.0f, (float)cos(f / 2.0f)));
     quaternion.mul(Quaternion(0.0f, (float)sin(f2 / 2.0f), 0.0f, (float)cos(f2 / 2.0f)));
     quaternion.mul(Quaternion(0.0f, 0.0f, (float)sin(f3 / 2.0f), (float)cos(f3 / 2.0f)));
     return quaternion;
 } 
+Quaternion Quaternion::fromXYZ(Vector3f vector3f) {
+    return fromXYZ(vector3f.x, vector3f.y, vector3f.z);
+}
+
 
 Vector3f Quaternion::toXYZ() {
     float f = r * r;

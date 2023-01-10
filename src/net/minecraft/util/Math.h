@@ -53,7 +53,6 @@ double                  frac(double d);
 long                    getSeed(int n, int n2, int n3);
 double                  inverseLerp(double d, double d2, double d3);
 float                   inverseLerp(float f, float f2, float f3);
-double                  atan2(double d, double d2);
 float                   fastInvSqrt(float f);
 double                  fastInvSqrt(double d);
 float                   fastInvCubeRoot(float f);
