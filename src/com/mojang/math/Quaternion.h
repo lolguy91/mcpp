@@ -14,7 +14,6 @@ public:
     Quaternion fromYXZ(float f, float f2, float f3);
     Quaternion fromXYZDegrees(Vector3f vector3f);
     Quaternion fromXYZ(Vector3f vector3f);
-    Quaternion fromXYZ(float f, float f2, float f3);
     Vector3f toXYZ();
     Vector3f toXYZDegrees();
     bool equals(Quaternion quaternion);
