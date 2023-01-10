@@ -2,7 +2,7 @@
 #include <src/com/mojang/math/Constants.h>
 #include <src/net/minecraft/util/Math.h>
 #include <math.h>
-#include <utility>
+
 
 #define ORDER   3
 #define G       5.82842712475
@@ -230,75 +230,75 @@ void Matrix3f::transpose() {
     m21 = f;
 }
 
-//Triple<Quaternion, Vector3f, Quaternion> Matrix3f::svdDecompose() {
-//    Quaternion quaternion = Quaternion.ONE.copy();
-//    Quaternion quaternion2 = Quaternion.ONE.copy();
-//    Matrix3f matrix3f = this.copy();
-//    matrix3f.transpose();
-//    matrix3f.mul(this);
-//    for (int i = 0; i < 5; ++i) {
-//        quaternion2.mul(Matrix3f.stepJacobi(matrix3f));
-//    }
-//    quaternion2.normalize();
-//    Matrix3f matrix3f2 = new Matrix3f(this);
-//    matrix3f2.mul(new Matrix3f(quaternion2));
-//    float f = 1.0f;
-//    Pair<Float, Float> pair = Matrix3f.qrGivensQuat(matrix3f2.m00, matrix3f2.m10);
-//    Float f2 = (Float)pair.getFirst();
-//    Float f3 = (Float)pair.getSecond();
-//    float f4 = f3.floatValue() * f3.floatValue() - f2.floatValue() * f2.floatValue();
-//    float f5 = -2.0f * f2.floatValue() * f3.floatValue();
-//    float f6 = f3.floatValue() * f3.floatValue() + f2.floatValue() * f2.floatValue();
-//    Quaternion quaternion3 = new Quaternion(0.0f, 0.0f, f2.floatValue(), f3.floatValue());
-//    quaternion.mul(quaternion3);
-//    Matrix3f matrix3f3 = new Matrix3f();
-//    matrix3f3.setIdentity();
-//    matrix3f3.m00 = f4;
-//    matrix3f3.m11 = f4;
-//    matrix3f3.m10 = f5;
-//    matrix3f3.m01 = -f5;
-//    matrix3f3.m22 = f6;
-//    f *= f6;
-//    matrix3f3.mul(matrix3f2);
-//    pair = Matrix3f.qrGivensQuat(matrix3f3.m00, matrix3f3.m20);
-//    float f7 = -((Float)pair.getFirst()).floatValue();
-//    Float f8 = (Float)pair.getSecond();
-//    float f9 = f8.floatValue() * f8.floatValue() - f7 * f7;
-//    float f10 = -2.0f * f7 * f8.floatValue();
-//    float f11 = f8.floatValue() * f8.floatValue() + f7 * f7;
-//    Quaternion quaternion4 = new Quaternion(0.0f, f7, 0.0f, f8.floatValue());
-//    quaternion.mul(quaternion4);
-//    Matrix3f matrix3f4 = new Matrix3f();
-//    matrix3f4.setIdentity();
-//    matrix3f4.m00 = f9;
-//    matrix3f4.m22 = f9;
-//    matrix3f4.m20 = -f10;
-//    matrix3f4.m02 = f10;
-//    matrix3f4.m11 = f11;
-//    f *= f11;
-//    matrix3f4.mul(matrix3f3);
-//    pair = Matrix3f.qrGivensQuat(matrix3f4.m11, matrix3f4.m21);
-//    Float f12 = (Float)pair.getFirst();
-//    Float f13 = (Float)pair.getSecond();
-//    float f14 = f13.floatValue() * f13.floatValue() - f12.floatValue() * f12.floatValue();
-//    float f15 = -2.0f * f12.floatValue() * f13.floatValue();
-//    float f16 = f13.floatValue() * f13.floatValue() + f12.floatValue() * f12.floatValue();
-//    Quaternion quaternion5 = new Quaternion(f12.floatValue(), 0.0f, 0.0f, f13.floatValue());
-//    quaternion.mul(quaternion5);
-//    Matrix3f matrix3f5 = new Matrix3f();
-//    matrix3f5.setIdentity();
-//    matrix3f5.m11 = f14;
-//    matrix3f5.m22 = f14;
-//    matrix3f5.m21 = f15;
-//    matrix3f5.m12 = -f15;
-//    matrix3f5.m00 = f16;
-//    f *= f16;
-//    matrix3f5.mul(matrix3f4);
-//    f = 1.0f / f;
-//    quaternion.mul((float)Math.sqrt(f));
-//    Vector3f vector3f = new Vector3f(matrix3f5.m00 * f, matrix3f5.m11 * f, matrix3f5.m22 * f);
-//    return Triple.of((Object)quaternion, (Object)vector3f, (Object)quaternion2);
-//}
+std::tuple<Quaternion, Vector3f, Quaternion> Matrix3f::svdDecompose() {
+    Quaternion quaternion = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+    Quaternion quaternion2 = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+    Matrix3f matrix3f = copy();
+    matrix3f.transpose();
+    matrix3f.mul(*this);
+    for (int i = 0; i < 5; ++i) {
+        quaternion2.mul(stepJacobi(matrix3f));
+    }
+    quaternion2.normalize();
+    Matrix3f matrix3f2 = Matrix3f(*this);
+    matrix3f2.mul(Matrix3f(quaternion2));
+    float f = 1.0f;
+    std::pair<float, float> pair = qrGivensQuat(matrix3f2.m00, matrix3f2.m10);
+    float f2 = (float)pair.first;
+    float f3 = (float)pair.second;
+    float f4 = f3 * f3 - f2 * f2;
+    float f5 = -2.0f * f2 * f3;
+    float f6 = f3 * f3 + f2 * f2;
+    Quaternion quaternion3 = Quaternion(0.0f, 0.0f, f2, f3);
+    quaternion.mul(quaternion3);
+    Matrix3f matrix3f3 = Matrix3f();
+    matrix3f3.setIdentity();
+    matrix3f3.m00 = f4;
+    matrix3f3.m11 = f4;
+    matrix3f3.m10 = f5;
+    matrix3f3.m01 = -f5;
+    matrix3f3.m22 = f6;
+    f *= f6;
+    matrix3f3.mul(matrix3f2);
+    pair = qrGivensQuat(matrix3f3.m00, matrix3f3.m20);
+    float f7 = -(float)pair.first;
+    float f8 = (float)pair.second;
+    float f9 = f8 * f8 - f7 * f7;
+    float f10 = -2.0f * f7 * f8;
+    float f11 = f8 * f8 + f7 * f7;
+    Quaternion quaternion4 = Quaternion(0.0f, f7, 0.0f, f8);
+    quaternion.mul(quaternion4);
+    Matrix3f matrix3f4 = Matrix3f();
+    matrix3f4.setIdentity();
+    matrix3f4.m00 = f9;
+    matrix3f4.m22 = f9;
+    matrix3f4.m20 = -f10;
+    matrix3f4.m02 = f10;
+    matrix3f4.m11 = f11;
+    f *= f11;
+    matrix3f4.mul(matrix3f3);
+    pair = qrGivensQuat(matrix3f4.m11, matrix3f4.m21);
+    float f12 = (float)pair.first;
+    float f13 = (float)pair.second;
+    float f14 = f13 * f13 - f12 * f12;
+    float f15 = -2.0f * f12 * f13;
+    float f16 = f13 * f13 + f12 * f12;
+    Quaternion quaternion5 = Quaternion(f12, 0.0f, 0.0f, f13);
+    quaternion.mul(quaternion5);
+    Matrix3f matrix3f5 = Matrix3f();
+    matrix3f5.setIdentity();
+    matrix3f5.m11 = f14;
+    matrix3f5.m22 = f14;
+    matrix3f5.m21 = f15;
+    matrix3f5.m12 = -f15;
+    matrix3f5.m00 = f16;
+    f *= f16;
+    matrix3f5.mul(matrix3f4);
+    f = 1.0f / f;
+    quaternion.mul((float)sqrt(f));
+    Vector3f vector3f = Vector3f(matrix3f5.m00 * f, matrix3f5.m11 * f, matrix3f5.m22 * f);
+    return std::tuple<Quaternion, Vector3f, Quaternion>(quaternion, vector3f, quaternion2);
+}
 
 bool Matrix3f::equals(Matrix3f matrix3f) {
     return  matrix3f.m00 == m00 &&

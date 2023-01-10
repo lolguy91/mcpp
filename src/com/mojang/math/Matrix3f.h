@@ -3,6 +3,8 @@
 
 #include <src/com/mojang/math/Quaternion.h>
 #include <src/com/mojang/math/Matrix4f.h>
+#include <utility>
+#include <tuple>
 class Matrix3f {
 public:
     float m00;
@@ -28,7 +30,7 @@ public:
     Quaternion stepJacobi(Matrix3f matrix3f);
     void sortSingularValues(Matrix3f matrix3f, Quaternion quaternion);
     void transpose();
-    //Triple<Quaternion, Vector3f, Quaternion> svdDecompose();
+    std::tuple<Quaternion, Vector3f, Quaternion> svdDecompose();
     bool equals(Matrix3f matrix3f);
     int hashCode();
     int bufferIndex(int n, int n2);
