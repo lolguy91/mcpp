@@ -2,6 +2,7 @@
 #define __MATRIX3F_H__
 
 #include <src/com/mojang/math/Quaternion.h>
+#include <src/com/mojang/math/Matrix4f.h>
 class Matrix3f {
 public:
     float m00;
@@ -19,7 +20,7 @@ public:
     Matrix3f(Quaternion quaternion);
 
     Matrix3f createScaleMatrix(float f, float f2, float f3);
-    //Matrix3f(Matrix4f matrix4f);
+    Matrix3f(Matrix4f matrix4f);
 
     //Matrix3f(Matrix3f matrix3f);
     std::pair<float, float> approxGivensQuat(float f, float f2, float f3);

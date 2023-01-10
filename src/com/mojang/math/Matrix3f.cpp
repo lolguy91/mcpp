@@ -46,17 +46,17 @@ Matrix3f Matrix3f::createScaleMatrix(float f, float f2, float f3) {
     return matrix3f;
 }
 
-//Matrix3f::Matrix3f(Matrix4f matrix4f) {
-//    m00 = matrix4f.m00;
-//    m01 = matrix4f.m01;
-//    m02 = matrix4f.m02;
-//    m10 = matrix4f.m10;
-//    m11 = matrix4f.m11;
-//    m12 = matrix4f.m12;
-//    m20 = matrix4f.m20;
-//    m21 = matrix4f.m21;
-//    m22 = matrix4f.m22;
-//}
+Matrix3f::Matrix3f(Matrix4f matrix4f) {
+    m00 = matrix4f.m00;
+    m01 = matrix4f.m01;
+    m02 = matrix4f.m02;
+    m10 = matrix4f.m10;
+    m11 = matrix4f.m11;
+    m12 = matrix4f.m12;
+    m20 = matrix4f.m20;
+    m21 = matrix4f.m21;
+    m22 = matrix4f.m22;
+}
 
 //Matrix3f::Matrix3f(Matrix3f matrix3f) {
 //    m00 = matrix3f.m00;
