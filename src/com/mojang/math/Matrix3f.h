@@ -22,9 +22,9 @@ public:
     //Matrix3f(Matrix4f matrix4f);
 
     //Matrix3f(Matrix3f matrix3f);
-    //private static Pair<Float, Float> approxGivensQuat(float f, float f2, float f3);
-    //private static Pair<Float, Float> qrGivensQuat(float f, float f2);
-    //Quaternion stepJacobi(Matrix3f matrix3f);
+    std::pair<float, float> approxGivensQuat(float f, float f2, float f3);
+    std::pair<float, float> qrGivensQuat(float f, float f2);
+    Quaternion stepJacobi(Matrix3f matrix3f);
     void sortSingularValues(Matrix3f matrix3f, Quaternion quaternion);
     void transpose();
     //Triple<Quaternion, Vector3f, Quaternion> svdDecompose();

@@ -2,6 +2,7 @@
 #include <src/com/mojang/math/Constants.h>
 #include <src/net/minecraft/util/Math.h>
 #include <math.h>
+#include <utility>
 
 #define ORDER   3
 #define G       5.82842712475
@@ -69,102 +70,102 @@ Matrix3f Matrix3f::createScaleMatrix(float f, float f2, float f3) {
 //    m22 = matrix3f.m22;
 //}
 
-//private static Pair<Float, Float> Matrix3f::approxGivensQuat(float f, float f2, float f3) {
-//    float f4 = f2;
-//    float f5 = 2.0f * (f - f3);
-//    if (G * f4 * f4 < f5 * f5) {
-//        float f6 = Mth.fastInvSqrt(f4 * f4 + f5 * f5);
-//        return Pair.of((Object)Float.valueOf(f6 * f4), (Object)Float.valueOf(f6 * f5));
-//    }
-//    return Pair.of((Object)Float.valueOf(SS), (Object)Float.valueOf(CS));
-//}
+std::pair<float, float> Matrix3f::approxGivensQuat(float f, float f2, float f3) {
+    float f4 = f2;
+    float f5 = 2.0f * (f - f3);
+    if (G * f4 * f4 < f5 * f5) {
+        float f6 = fastInvSqrt(f4 * f4 + f5 * f5);
+        return std::pair<float,float>(f6 * f4,f6 * f5);
+    }
+    return std::pair<float,float>(SS,CS);
+}
 
-//private static Pair<Float, Float> Matrix3f::qrGivensQuat(float f, float f2) {
-//    float f3;
-//    float f4 = (float)Math.hypot(f, f2);
-//    float f5 = f4 > 1.0E-6f ? f2 : 0.0f;
-//    float f6 = Math.abs(f) + Math.max(f4, 1.0E-6f);
-//    if (f < 0.0f) {
-//        f3 = f5;
-//        f5 = f6;
-//        f6 = f3;
-//    }
-//    f3 = Mth.fastInvSqrt(f6 * f6 + f5 * f5);
-//    return Pair.of((Object)Float.valueOf(f5 *= f3), (Object)Float.valueOf(f6 *= f3));
-//}
+std::pair<float, float> Matrix3f::qrGivensQuat(float f, float f2) {
+    float f3;
+    float f4 = (float)hypot(f, f2);
+    float f5 = f4 > 1.0E-6f ? f2 : 0.0f;
+    float f6 = abs(f) + max(f4, 1.0E-6f);
+    if (f < 0.0f) {
+        f3 = f5;
+        f5 = f6;
+        f6 = f3;
+    }
+    f3 = fastInvSqrt(f6 * f6 + f5 * f5);
+    return std::pair<float,float>(f5 *= f3,f6 *= f3);
+}
 
-//Quaternion Matrix3f::stepJacobi(Matrix3f matrix3f) {
-//    float f;
-//    float f2;
-//    float f3;
-//    Quaternion quaternion;
-//    float f4;
-//    float f5;
-//    Pair<Float, Float> pair;
-//    Matrix3f matrix3f2 = new Matrix3f();
-//    Quaternion quaternion2 = Quaternion.ONE.copy();
-//    if (matrix3f.m01 * matrix3f.m01 + matrix3f.m10 * matrix3f.m10 > 1.0E-6f) {
-//        pair = Matrix3f.approxGivensQuat(matrix3f.m00, 0.5f * (matrix3f.m01 + matrix3f.m10), matrix3f.m11);
-//        f5 = (Float)pair.getFirst();
-//        f4 = (Float)pair.getSecond();
-//        quaternion = new Quaternion(0.0f, 0.0f, f5.floatValue(), f4.floatValue());
-//        f3 = f4.floatValue() * f4.floatValue() - f5.floatValue() * f5.floatValue();
-//        f2 = -2.0f * f5.floatValue() * f4.floatValue();
-//        f = f4.floatValue() * f4.floatValue() + f5.floatValue() * f5.floatValue();
-//        quaternion2.mul(quaternion);
-//        matrix3f2.setIdentity();
-//        matrix3f2.m00 = f3;
-//        matrix3f2.m11 = f3;
-//        matrix3f2.m10 = -f2;
-//        matrix3f2.m01 = f2;
-//        matrix3f2.m22 = f;
-//        matrix3f.mul(matrix3f2);
-//        matrix3f2.transpose();
-//        matrix3f2.mul(matrix3f);
-//        matrix3f.load(matrix3f2);
-//    }
-//    if (matrix3f.m02 * matrix3f.m02 + matrix3f.m20 * matrix3f.m20 > 1.0E-6f) {
-//        pair = Matrix3f.approxGivensQuat(matrix3f.m00, 0.5f * (matrix3f.m02 + matrix3f.m20), matrix3f.m22);
-//        float f6 = -((Float)pair.getFirst()).floatValue();
-//        f4 = (Float)pair.getSecond();
-//        quaternion = new Quaternion(0.0f, f6, 0.0f, f4.floatValue());
-//        f3 = f4.floatValue() * f4.floatValue() - f6 * f6;
-//        f2 = -2.0f * f6 * f4.floatValue();
-//        f = f4.floatValue() * f4.floatValue() + f6 * f6;
-//        quaternion2.mul(quaternion);
-//        matrix3f2.setIdentity();
-//        matrix3f2.m00 = f3;
-//        matrix3f2.m22 = f3;
-//        matrix3f2.m20 = f2;
-//        matrix3f2.m02 = -f2;
-//        matrix3f2.m11 = f;
-//        matrix3f.mul(matrix3f2);
-//        matrix3f2.transpose();
-//        matrix3f2.mul(matrix3f);
-//        matrix3f.load(matrix3f2);
-//    }
-//    if (matrix3f.m12 * matrix3f.m12 + matrix3f.m21 * matrix3f.m21 > 1.0E-6f) {
-//        pair = Matrix3f.approxGivensQuat(matrix3f.m11, 0.5f * (matrix3f.m12 + matrix3f.m21), matrix3f.m22);
-//        f5 = (Float)pair.getFirst();
-//        f4 = (Float)pair.getSecond();
-//        quaternion = new Quaternion(f5.floatValue(), 0.0f, 0.0f, f4.floatValue());
-//        f3 = f4.floatValue() * f4.floatValue() - f5.floatValue() * f5.floatValue();
-//        f2 = -2.0f * f5.floatValue() * f4.floatValue();
-//        f = f4.floatValue() * f4.floatValue() + f5.floatValue() * f5.floatValue();
-//        quaternion2.mul(quaternion);
-//        matrix3f2.setIdentity();
-//        matrix3f2.m11 = f3;
-//        matrix3f2.m22 = f3;
-//        matrix3f2.m21 = -f2;
-//        matrix3f2.m12 = f2;
-//        matrix3f2.m00 = f;
-//        matrix3f.mul(matrix3f2);
-//        matrix3f2.transpose();
-//        matrix3f2.mul(matrix3f);
-//        matrix3f.load(matrix3f2);
-//    }
-//    return quaternion2;
-//}
+Quaternion Matrix3f::stepJacobi(Matrix3f matrix3f) {
+    float f;
+    float f2;
+    float f3;
+    Quaternion quaternion;
+    float f4;
+    float f5;
+    std::pair<float, float> pair;
+    Matrix3f matrix3f2 = Matrix3f();
+    Quaternion quaternion2 = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+    if (matrix3f.m01 * matrix3f.m01 + matrix3f.m10 * matrix3f.m10 > 1.0E-6f) {
+        pair = approxGivensQuat(matrix3f.m00, 0.5f * (matrix3f.m01 + matrix3f.m10), matrix3f.m11);
+        f5 = (float)pair.first;
+        f4 = (float)pair.second;
+        quaternion = Quaternion(0.0f, 0.0f, f5, f4);
+        f3 = f4 * f4 - f5 * f5;
+        f2 = -2.0f * f5 * f4;
+        f = f4 * f4 + f5 * f5;
+        quaternion2.mul(quaternion);
+        matrix3f2.setIdentity();
+        matrix3f2.m00 = f3;
+        matrix3f2.m11 = f3;
+        matrix3f2.m10 = -f2;
+        matrix3f2.m01 = f2;
+        matrix3f2.m22 = f;
+        matrix3f.mul(matrix3f2);
+        matrix3f2.transpose();
+        matrix3f2.mul(matrix3f);
+        matrix3f.load(matrix3f2);
+    }
+    if (matrix3f.m02 * matrix3f.m02 + matrix3f.m20 * matrix3f.m20 > 1.0E-6f) {
+        pair = approxGivensQuat(matrix3f.m00, 0.5f * (matrix3f.m02 + matrix3f.m20), matrix3f.m22);
+        float f6 = -((float)pair.first);
+        f4 = (float)pair.second;
+        quaternion =Quaternion(0.0f, f6, 0.0f, f4);
+        f3 = f4 * f4 - f6 * f6;
+        f2 = -2.0f * f6 * f4;
+        f = f4 * f4 + f6 * f6;
+        quaternion2.mul(quaternion);
+        matrix3f2.setIdentity();
+        matrix3f2.m00 = f3;
+        matrix3f2.m22 = f3;
+        matrix3f2.m20 = f2;
+        matrix3f2.m02 = -f2;
+        matrix3f2.m11 = f;
+        matrix3f.mul(matrix3f2);
+        matrix3f2.transpose();
+        matrix3f2.mul(matrix3f);
+        matrix3f.load(matrix3f2);
+    }
+    if (matrix3f.m12 * matrix3f.m12 + matrix3f.m21 * matrix3f.m21 > 1.0E-6f) {
+        pair = approxGivensQuat(matrix3f.m11, 0.5f * (matrix3f.m12 + matrix3f.m21), matrix3f.m22);
+        f5 = (float)pair.first;
+        f4 = (float)pair.second;
+        quaternion = Quaternion(f5, 0.0f, 0.0f, f4);
+        f3 = f4 * f4 - f5 * f5;
+        f2 = -2.0f * f5 * f4;
+        f = f4 * f4 + f5 * f5;
+        quaternion2.mul(quaternion);
+        matrix3f2.setIdentity();
+        matrix3f2.m11 = f3;
+        matrix3f2.m22 = f3;
+        matrix3f2.m21 = -f2;
+        matrix3f2.m12 = f2;
+        matrix3f2.m00 = f;
+        matrix3f.mul(matrix3f2);
+        matrix3f2.transpose();
+        matrix3f2.mul(matrix3f);
+        matrix3f.load(matrix3f2);
+    }
+    return quaternion2;
+}
 
 void Matrix3f::sortSingularValues(Matrix3f matrix3f, Quaternion quaternion) {
     Quaternion quaternion2;
