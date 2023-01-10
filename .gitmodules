@@ -1,3 +1,6 @@
 [submodule "lib/glfw"]
 	path = lib/glfw
 	url = https://github.com/glfw/glfw
+[submodule "lib/ConcurrentQueue"]
+	path = lib/ConcurrentQueue
+	url = https://github.com/bhhbazinga/ConcurrentQueue
