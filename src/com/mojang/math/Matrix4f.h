@@ -48,14 +48,14 @@ class Matrix4f {
     void add(Matrix4f matrix4f);
     void subtract(Matrix4f matrix4f);
     float trace();
-    Matrix4f perspective(double d, float f, float f2, float f3);
-    Matrix4f orthographic(float f, float f2, float f3, float f4);
-    Matrix4f orthographic(float f, float f2, float f3, float f4, float f5, float f6);
+    static Matrix4f perspective(double d, float f, float f2, float f3);
+    static Matrix4f orthographic(float f, float f2, float f3, float f4);
+    static Matrix4f orthographic(float f, float f2, float f3, float f4, float f5, float f6);
     void translate(Vector3f vector3f);
     Matrix4f copy();
     void multiplyWithTranslation(float f, float f2, float f3);
-    Matrix4f createScaleMatrix(float f, float f2, float f3);
-    Matrix4f createTranslateMatrix(float f, float f2, float f3);
+    static Matrix4f createScaleMatrix(float f, float f2, float f3);
+    static Matrix4f createTranslateMatrix(float f, float f2, float f3);
 };
 
 
