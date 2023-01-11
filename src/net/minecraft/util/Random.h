@@ -44,72 +44,29 @@ class RandomSource{
     long seed;
     Gaussian gaussianSource;
 
-    int nextInt() {
-        return next(32);
-    }
+    int nextInt();
 
-    int nextInt(int n) {
-        int n2;
-        int n3;
-        if (n <= 0) {
-            __glibcxx_assert(false);
-        }
-        if ((n & n - 1) == 0) {
-            return (int)((long)n * (long)next(31) >> 31);
-        }
-        while ((n3 = next(31)) - (n2 = n3 % n) + (n - 1) < 0) {
-        }
-        return n2;
-    }
+    int nextInt(int n);
 
-    long nextLong() {
-        int n = next(32);
-        int n2 = next(32);
-        long l = (long)n << 32;
-        return l + (long)n2;
-    }
+    long nextLong();
 
-    bool nextBoolean() {
-        return next(1) != 0;
-    }
+    bool nextBoolean();
 
-    float nextFloat() {
-        return (float)next(24) * 5.9604645E-8f;
-    }
+    float nextFloat();
 
-    double nextDouble() {
-        int n = next(26);
-        int n2 = next(27);
-        long l = ((long)n << 27) + (long)n2;
-        return (double)l * (double)1.110223E-16f;
-    }
+    double nextDouble();
 
-    RandomSource(long l) {
-        setSeed(l);
-    }
+    RandomSource(long l);
 
-    RandomSource fork() {
-        return RandomSource(nextLong());
-    }
+    RandomSource fork();
 
-    PositionalRandomFactory forkPositional() {
-        return PositionalRandomFactory(nextLong());
-    }
+    PositionalRandomFactory forkPositional();
 
-    void setSeed(long l) {
-        seed = (l ^ 0x5DEECE66DL) & 0xFFFFFFFFFFFFL;
-        gaussianSource.reset();
-    }
+    void setSeed(long l);
 
-    int next(int n) {
-        long l;
-        l = seed * 25214903917L + 11L & 0xFFFFFFFFFFFFL;
-        return (int)(l >> 48 - n);
-    }
+    int next(int n);
 
-    double nextGaussian() {
-        return gaussianSource.MknextGaussian(nextDouble(),nextDouble());
-    }
+    double nextGaussian();
 
 };
 #endif // __RANDOM_H__
