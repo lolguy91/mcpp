@@ -1,5 +1,6 @@
 #include <src/com/mojang/math/Constants.h>
 #include <src/net/minecraft/util/Math.h>
+#include <src/net/minecraft/util/Random.h>
 #include <math.h>
 #include <random>
 #include <iostream>
@@ -130,25 +131,25 @@ double AbsMax(double d, double d2) {
     }
     return d > d2 ? d : d2;
 }
-int NextInt(int min, int max) {
+int NextInt(RandomSource randomSource,int min, int max) {
     if (min >= max) {
         return min;
     }
-    return rand() * (max - min) + min;
+    return randomSource.nextInt(max - min + 1) + min;
 }
 
-float NextFloat(float min, float max) {
+float NextFloat(RandomSource randomSource,float min, float max) {
     if (min >= max) {
         return min;
     }
-    return rand() * (max - min) + min;
+    return randomSource.nextFloat() + min;
 }
 
-double NextDouble(double min, double max) {
+double NextDouble(RandomSource randomSource,double min, double max) {
     if (min >= max) {
         return min;
     }
-    return rand() * (max - min) + min;
+    return randomSource.nextDouble() * (max - min + 1) + min;
 }
  double Average(std::vector<long> input) {
     long sum = 0L;
@@ -466,8 +467,8 @@ std::vector<double> cumulativeSum(std::vector<double> arrd) {
     return arrd;
 }
 
- int getRandomForDistributionIntegral(std::vector<double> arrd) {
-    double d = rand();
+ int getRandomForDistributionIntegral(RandomSource randomSource,std::vector<double> arrd) {
+    double d = randomSource.nextDouble();
     for (int i = 0; i < arrd.size(); ++i) {
         if (!(d < arrd[i])) continue;
         return i;
@@ -614,8 +615,7 @@ float map(float f, float f2, float f3, float f4, float f5) {
 }
 
 double wobble(double d) {
-    srand(Floor(d * 3000.0));
-    return d + (2.0 * rand() - 1.0) * 1.0E-7 / 2.0;
+    return d + (2.0 * RandomSource(floor(d * 3000.0)).nextDouble() - 1.0) * 1.0E-7 / 2.0;
 }
 
 int roundToward(int n, int n2) {
@@ -626,16 +626,16 @@ int positiveCeilDiv(int n, int n2) {
     return -Floor((float)(-n / n2));
 }
 
-int randomBetweenInclusive(int n, int n2) {
-    return rand() * (n2 - n) + n;
+int randomBetweenInclusive(RandomSource randomSource,int n, int n2) {
+    return randomSource.nextInt(n2 - n + 1) + n;
 }
 
-float randomBetween(float f, float f2) {
-    return rand() * (f2 - f) + f;
+float randomBetween(RandomSource randomSource,float f, float f2) {
+    return randomSource.nextFloat() * (f2 - f) + f;
 }
 
-float normal(float f, float f2) {
-    return f + (float)rand() * f2;
+float normal(RandomSource randomSource,float f, float f2) {
+    return f + (float)randomSource.nextGaussian() * f2;
 }
 
 double lengthSquared(double d, double d2) {

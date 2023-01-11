@@ -2,6 +2,7 @@
 #define __MATH_H__
 
 #include <vector>
+class RandomSource;
 
 float                   Sin(float input);
 float                   Cos(float input);
@@ -23,9 +24,9 @@ double                  Clamp(double input, double min, double max);
 double                  ClampedLerp(double input, double min, double max);
 float                   ClampedLerp(float input, float min, float max);
 double                  AbsMax(double d, double d2);
-int                     NextInt(int min, int max);
-float                   NextFloat(float min, float max);
-double                  NextDouble(double min, double max);
+int                     NextInt(RandomSource randomSource,int min, int max);
+float                   NextFloat(RandomSource randomSource,float min, float max);
+double                  NextDouble(RandomSource randomSource,double min, double max);
 double                  Average(std::vector<long> input);
 bool                    Equal(float f, float f2);
 bool                    Equal(double d, double d2);
@@ -60,7 +61,7 @@ int                     hsvToRgb(float f, float f2, float f3);
 int                     murmurHash3Mixer(int n);
 long                    murmurHash3Mixer(long l);
 std::vector<double>     cumulativeSum(std::vector<double> arrd);
-int                     getRandomForDistributionIntegral(std::vector<double> arrd);
+int                     getRandomForDistributionIntegral(RandomSource randomSource,std::vector<double> arrd);
 int                     max(int input, int max);
 std::vector<double>     binNormalDistribution(double d, double d2, double d3, int n, int n2);
 std::vector<double>     binBiModalNormalDistribution(double d, double d2, double d3, double d4, double d5, double d6, int n, int n2);
@@ -86,9 +87,9 @@ float                   map(float f, float f2, float f3, float f4, float f5);
 double                  wobble(double d);
 int                     roundToward(int n, int n2);
 int                     positiveCeilDiv(int n, int n2);
-int                     randomBetweenInclusive(int n, int n2);
-float                   randomBetween(float f, float f2);
-float                   normal(float f, float f2);
+int                     randomBetweenInclusive(RandomSource randomSource,int n, int n2);
+float                   randomBetween(RandomSource randomSource,float f, float f2);
+float                   normal(RandomSource randomSource,float f, float f2);
 double                  lengthSquared(double d, double d2);
 double                  length(double d, double d2);
 double                  lengthSquared(double d, double d2, double d3);
