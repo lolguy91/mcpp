@@ -2,6 +2,7 @@
 #define __GAUSSIAN_H__
 
 class Gaussian {
+    public:
     double nextNextGaussian;
     bool haveNextNextGaussian;
 
