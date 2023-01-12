@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
-
-//now, go though every function and try to fix the errors in them if you need help, ping me in session chat ok?
-//are you here?
+#include <src/com/mojang/lib3d/platform/MiscClasses.h>
+#include <spdlog/spdlog.h>
+#include <stb/stb_image.h>
 class Window{
     public:
     //GLFWErrorCallback defaultErrorCallback = GLFWErrorCallback.create((arg_0, arg_1) -> defaultErrorCallback(arg_0, arg_1));
@@ -12,11 +12,11 @@ class Window{
     int windowedY;
     int windowedWidth;
     int windowedHeight;
-    //VideoMode preferredFullscreenVideoMode;
+    VideoMode preferredFullscreenVideoMode;
     bool fullscreen;
     bool actuallyFullscreen;
-    int x;
-    int y;
+    int posx;
+    int posy;
     int width;
     int height;
     int framebufferWidth;
@@ -33,16 +33,15 @@ class Window{
         //WindowEventHandler windowEventHandler,
         //ScreenManager screenManager,
         //DisplayData displayData,
-        char* string, char* string2) {
+        VideoMode fullscrvidmode, char* title) {
         //RenderSystem.assertInInitPhase();
         //screenManager = screenManager;
         //setBootErrorCallback();
         //setErrorSection("Pre startup");
         //eventHandler = windowEventHandler;
-        //Optional<VideoMode> optional = VideoMode.read(string);
-        //preferredFullscreenVideoMode = optional.isPresent() ? optional : (displayData.fullscreenWidth.isPresent() && displayData.fullscreenHeight.isPresent() ? Optional.of(new VideoMode(displayData.fullscreenWidth.getAsInt(), displayData.fullscreenHeight.getAsInt(), 8, 8, 8, 60)) : Optional.empty());
+        preferredFullscreenVideoMode = fullscrvidmode;
         //actuallyFullscreen = fullscreen = displayData.isFullscreen;
-        GLFWmonitor* monitor = /*screenManager.getMonitor(*/glfwGetPrimaryMonitor();
+        Monitor monitor = /*screenManager.getMonitor(*/Monitor(glfwGetPrimaryMonitor());
         width = 800;//displayData.width > 0 ? displayData.width : 1;
         //windowedWidth = width;
         height = 600;//displayData.height > 0 ? displayData.height : 1;
@@ -54,38 +53,31 @@ class Window{
         glfwWindowHint((int)139267, (int)2);
         glfwWindowHint((int)139272, (int)204801);
         glfwWindowHint((int)139270, (int)1);
-        window = glfwCreateWindow((int)width, (int)height, (const char*)string2, (fullscreen && !monitor ? monitor/*.getGLFWMonitor()*/ : NULL), NULL);
-        //if (monitor != null) {
-        //    VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : Optional.empty());
-        //    windowedX = x = monitor.getX() + videoMode.getWidth() / 2 - width / 2;
-        //    windowedY = y = monitor.getY() + videoMode.getHeight() / 2 - height / 2;
-        //} else {
-        //    int[] arrn = new int[1];
-        //    int[] arrn2 = new int[1];
-        //    glfwGetWindowPos((long)window, (int[])arrn, (int[])arrn2);
-        //    windowedX = x = arrn[0];
-        //    windowedY = y = arrn2[0];
-        //}
+        window = glfwCreateWindow((int)width, (int)height, (const char*)title, (fullscreen && monitor.equals(Monitor()) ? monitor.monitor : NULL), NULL);
+        if (monitor.equals(Monitor())) {
+            VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : VideoMode());
+            windowedX = posx = monitor.x + videoMode.width / 2 - width / 2;
+            windowedY = posy = monitor.y + videoMode.height / 2 - height / 2;
+        } else {
+            int x,y;
+            glfwGetWindowPos(window, &x, &y);
+            windowedX = posx = x;
+            windowedY = posy = y;
+        }
         glfwMakeContextCurrent(window);
         //GL.createCapabilities();
-        //setMode();
-        //refreshFramebufferSize();
-        //glfwSetFramebufferSizeCallback(window, &onFramebufferResize);
-        //glfwSetWindowPosCallback(window, &onMove);
-        //glfwSetWindowSizeCallback(window, &onResize);
-        //glfwSetWindowFocusCallback(window, &onFocus);
-        //glfwSetCursorEnterCallback(window, &onEnter);
+        setMode();
+        refreshFramebufferSize();
+        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)&onFramebufferResize);
+        glfwSetWindowPosCallback(window, (GLFWwindowposfun)&onMove);
+        glfwSetWindowSizeCallback(window, (GLFWwindowsizefun)&onResize);
+        glfwSetWindowFocusCallback(window, (GLFWwindowfocusfun)&onFocus);
+        glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)&onEnter);
     }
 
-    //int getRefreshRate() {
-    //    RenderSystem.assertOnRenderThread();
-    //    return _getRefreshRate(this);
-    //}
-//
-    //bool shouldClose() {
-    //    return GLX._shouldClose(this);
-    //}
-//
+    bool shouldClose() {
+        return glfwWindowShouldClose(window);
+    }
     //void checkGlfwError(BiConsumer<Integer, String> biConsumer) {
     //    RenderSystem.assertInInitPhase();
     //    try (MemoryStack memoryStack = MemoryStack.stackPush();){
@@ -99,49 +91,48 @@ class Window{
     //    }
     //}
 //
-    //void setIcon(InputStream inputStream, InputStream inputStream2) {
-    //    RenderSystem.assertInInitPhase();
-    //    try (MemoryStack memoryStack = MemoryStack.stackPush();){
-    //        if (inputStream == null) {
-    //            throw new FileNotFoundException("icons/icon_16x16.png");
-    //        }
-    //        if (inputStream2 == null) {
-    //            throw new FileNotFoundException("icons/icon_32x32.png");
-    //        }
-    //        IntBuffer intBuffer = memoryStack.mallocInt(1);
-    //        IntBuffer intBuffer2 = memoryStack.mallocInt(1);
-    //        IntBuffer intBuffer3 = memoryStack.mallocInt(1);
-    //        GLFWImage.Buffer buffer = GLFWImage.mallocStack((int)2, (MemoryStack)memoryStack);
-    //        ByteBuffer byteBuffer = readIconPixels(inputStream, intBuffer, intBuffer2, intBuffer3);
-    //        if (byteBuffer == null) {
-    //            throw new IllegalStateException("Could not load icon: " + STBImage.stbi_failure_reason());
-    //        }
-    //        buffer.position(0);
-    //        buffer.width(intBuffer.get(0));
-    //        buffer.height(intBuffer2.get(0));
-    //        buffer.pixels(byteBuffer);
-    //        ByteBuffer byteBuffer2 = readIconPixels(inputStream2, intBuffer, intBuffer2, intBuffer3);
-    //        if (byteBuffer2 == null) {
-    //            throw new IllegalStateException("Could not load icon: " + STBImage.stbi_failure_reason());
-    //        }
-    //        buffer.position(1);
-    //        buffer.width(intBuffer.get(0));
-    //        buffer.height(intBuffer2.get(0));
-    //        buffer.pixels(byteBuffer2);
-    //        buffer.position(0);
-    //        glfwSetWindowIcon((long)window, (GLFWImage.Buffer)buffer);
-    //        STBImage.stbi_image_free((ByteBuffer)byteBuffer);
-    //        STBImage.stbi_image_free((ByteBuffer)byteBuffer2);
-    //    }
-    //    catch (IOException iOException) {
-    //        LOGGER.error("Couldn't set icon", (Throwable)iOException);
-    //    }
-    //}
+    void setIcon(char* fileloc, char* fileloc2) {
+        
+        //RenderSystem.assertInInitPhase();
+	    int m_Width, m_Height;
+	    unsigned char* m_LocalBuffer;
+        stbi_set_flip_vertically_on_load(1);
+		m_LocalBuffer = stbi_load(fileloc, &m_Width, &m_Height, nullptr, 4);
+
+		if (!m_LocalBuffer)
+		{
+			spdlog::error("could not set icon 1 to : '{}'",fileloc);
+            return;
+		}
+
+        int m_Width2, m_Height2;
+	    unsigned char* m_LocalBuffer2;
+        stbi_set_flip_vertically_on_load(1);
+		m_LocalBuffer2 = stbi_load(fileloc, &m_Width2, &m_Height2, nullptr, 4);
+
+		if (!m_LocalBuffer2)
+		{
+			spdlog::error("could not set icon 2 to : '{}'",fileloc2);
+            return;
+		}
+
+        GLFWimage images[2];
+
+        images[0].pixels = m_LocalBuffer;
+        images[0].height = m_Height;
+        images[0].width  = m_Width;
+
+        images[1].pixels = m_LocalBuffer2;
+        images[1].height = m_Height2;
+        images[1].width  = m_Width2;
+
+        glfwSetWindowIcon(window,2,images);
+    }
 //
     ///*
     // * WARNING - Removed try catching itself - possible behaviour change.
     // */
-    //@Nullable
+    //
     //ByteBuffer readIconPixels(InputStream inputStream, IntBuffer intBuffer, IntBuffer intBuffer2, IntBuffer intBuffer3) throws IOException {
     //    RenderSystem.assertInInitPhase();
     //    ByteBuffer byteBuffer = null;
@@ -158,10 +149,8 @@ class Window{
     //    }
     //}
 //
-    //void setErrorSection(String string) {
-    //    errorSection = string;
-    //}
-//
+
+
     //void setBootErrorCallback() {
     //    RenderSystem.assertInInitPhase();
     //    glfwSetErrorCallback(Window::bootCrash);
@@ -174,91 +163,84 @@ class Window{
     //    throw new WindowInitFailed(string);
     //}
 //
-    //void defaultErrorCallback(int n, long l) {
-    //    RenderSystem.assertOnRenderThread();
-    //    String string = MemoryUtil.memUTF8((long)l);
-    //    LOGGER.error("########## GL ERROR ##########");
-    //    LOGGER.error("@ {}", (Object)errorSection);
-    //    LOGGER.error("{}: {}", (Object)n, (Object)string);
-    //}
+    void defaultErrorCallback(int n, long l) {
+        //TODO: implement this
+        //RenderSystem.assertOnRenderThread();
+        spdlog::error("########## GL ERROR ##########");
+        spdlog::error("@ {}", errorSection);
+        spdlog::error("{0:d}: {0:d}", n, l);
+    }
+
+    void setDefaultErrorCallback() {
+    glfwSetErrorCallback((GLFWerrorfun)&defaultErrorCallback);
+    }
+
+    void updateVsync(bool bl) {
+    //TODO:implement this
+    //RenderSystem.assertOnRenderThreadOrInit();
+        vsync = bl;
+        glfwSwapInterval((int)(bl ? 1 : 0));
+    }
+
+    void close() {
+        //TODO:implement this
+        //RenderSystem.assertOnRenderThread();
+        //Callbacks.glfwFreeCallbacks((long)window);
+        //defaultErrorCallback.close();
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+
+    GLFWwindowposfun onMove(long l, int n, int n2) {
+        posx = n;
+        posy = n2;
+    }
+
+    void onFramebufferResize(GLFWwindow* _window, int n, int n2) {
+        if (_window != window) {
+            return;
+        }
+        int n3 = width;
+        int n4 = height;
+        if (n == 0 || n2 == 0) {
+            return;
+        }
+        framebufferWidth = n;
+        framebufferHeight = n2;
+        if (width != n3 || height != n4) {
+        //TODO: implement this
+        //    eventHandler.resizeDisplay();
+        }
+    }
+
+    void refreshFramebufferSize() {
+        //TODO:implement this
+        //RenderSystem.assertInInitPhase();
+        int x,y;
+        glfwGetFramebufferSize(window, &x, &y);
+        framebufferWidth = x > 0 ? x : 1;
+        framebufferHeight = y > 0 ? y : 1;
+    }
+
+    void onResize(GLFWwindow* l, int n, int n2) {
+        width = n;
+        height = n2;
+    }
+
+    void onFocus(GLFWwindow* l, bool bl) {
+        if (l == window) {
+            //TODO: implement this
+            //eventHandler.setWindowActive(bl);
+        }
+    }
 //
-    //void setDefaultErrorCallback() {
-    //    GLFWErrorCallback gLFWErrorCallback = glfwSetErrorCallback((GLFWErrorCallbackI)defaultErrorCallback);
-    //    if (gLFWErrorCallback != null) {
-    //        gLFWErrorCallback.free();
-    //    }
-    //}
-//
-    //void updateVsync(bool bl) {
-    //    RenderSystem.assertOnRenderThreadOrInit();
-    //    vsync = bl;
-    //    glfwSwapInterval((int)(bl ? 1 : 0));
-    //}
-//
-    //@Override
-    //void close() {
-    //    RenderSystem.assertOnRenderThread();
-    //    Callbacks.glfwFreeCallbacks((long)window);
-    //    defaultErrorCallback.close();
-    //    glfwDestroyWindow((long)window);
-    //    glfwTerminate();
-    //}
-//
-    //void onMove(long l, int n, int n2) {
-    //    x = n;
-    //    y = n2;
-    //}
-//
-    //void onFramebufferResize(long l, int n, int n2) {
-    //    if (l != window) {
-    //        return;
-    //    }
-    //    int n3 = getWidth();
-    //    int n4 = getHeight();
-    //    if (n == 0 || n2 == 0) {
-    //        return;
-    //    }
-    //    framebufferWidth = n;
-    //    framebufferHeight = n2;
-    //    if (getWidth() != n3 || getHeight() != n4) {
-    //        eventHandler.resizeDisplay();
-    //    }
-    //}
-//
-    //void refreshFramebufferSize() {
-    //    RenderSystem.assertInInitPhase();
-    //    int[] arrn = new int[1];
-    //    int[] arrn2 = new int[1];
-    //    glfwGetFramebufferSize((long)window, (int[])arrn, (int[])arrn2);
-    //    framebufferWidth = arrn[0] > 0 ? arrn[0] : 1;
-    //    framebufferHeight = arrn2[0] > 0 ? arrn2[0] : 1;
-    //}
-//
-    //void onResize(long l, int n, int n2) {
-    //    width = n;
-    //    height = n2;
-    //}
-//
-    //void onFocus(long l, bool bl) {
-    //    if (l == window) {
-    //        eventHandler.setWindowActive(bl);
-    //    }
-    //}
-//
-    //void onEnter(long l, bool bl) {
-    //    if (bl) {
-    //        eventHandler.cursorEntered();
-    //    }
-    //}
-//
-    //void setFramerateLimit(int n) {
-    //    framerateLimit = n;
-    //}
-//
-    //int getFramerateLimit() {
-    //    return framerateLimit;
-    //}
-//
+    void onEnter(GLFWwindow* l, bool bl) {
+        if (bl) {
+            //TODO: implement this
+            //eventHandler.cursorEntered();
+        }
+    }
+
     //void updateDisplay() {
     //    RenderSystem.flipFrame(window);
     //    if (fullscreen != actuallyFullscreen) {
@@ -266,73 +248,73 @@ class Window{
     //        updateFullscreen(vsync);
     //    }
     //}
-//
-    //Optional<VideoMode> getPreferredFullscreenVideoMode() {
-    //    return preferredFullscreenVideoMode;
-    //}
-//
-    //void setPreferredFullscreenVideoMode(Optional<VideoMode> optional) {
-    //    bool bl = !optional.equals(preferredFullscreenVideoMode);
-    //    preferredFullscreenVideoMode = optional;
-    //    if (bl) {
-    //        dirty = true;
-    //    }
-    //}
-//
-    //void changeFullscreenVideoMode() {
-    //    if (fullscreen && dirty) {
-    //        dirty = false;
-    //        setMode();
-    //        eventHandler.resizeDisplay();
-    //    }
-    //}
-//
-    //void setMode() {
-    //    bool bl;
-    //    RenderSystem.assertInInitPhase();
-    //    bool bl2 = bl = glfwGetWindowGLFWMonitor((long)window) != 0L;
-    //    if (fullscreen) {
-    //        GLFWMonitor monitor = screenManager.findBestGLFWMonitor(this);
-    //        if (monitor == null) {
-    //            LOGGER.warn("Failed to find suitable monitor for fullscreen mode");
-    //            fullscreen = false;
-    //        } else {
-    //            if (Minecraft.ON_OSX) {
-    //                MacosUtil.toggleFullscreen(window);
-    //            }
-    //            VideoMode videoMode = monitor.getPreferredVidMode(preferredFullscreenVideoMode);
-    //            if (!bl) {
-    //                windowedX = x;
-    //                windowedY = y;
-    //                windowedWidth = width;
-    //                windowedHeight = height;
-    //            }
-    //            x = 0;
-    //            y = 0;
-    //            width = videoMode.getWidth();
-    //            height = videoMode.getHeight();
-    //            glfwSetWindowGLFWMonitor((long)window, (long)monitor.getGLFWMonitor(), (int)x, (int)y, (int)width, (int)height, (int)videoMode.getRefreshRate());
-    //        }
-    //    } else {
-    //        x = windowedX;
-    //        y = windowedY;
-    //        width = windowedWidth;
-    //        height = windowedHeight;
-    //        glfwSetWindowGLFWMonitor((long)window, (long)0L, (int)x, (int)y, (int)width, (int)height, (int)-1);
-    //    }
-    //}
-//
-    //void toggleFullScreen() {
-    //    fullscreen = !fullscreen;
-    //}
-//
-    //void setWindowed(int n, int n2) {
-    //    windowedWidth = n;
-    //    windowedHeight = n2;
-    //    fullscreen = false;
-    //    setMode();
-    //}
-//
+
+
+    void setPreferredFullscreenVideoMode(VideoMode vm) {
+        bool bl = !vm.equals(preferredFullscreenVideoMode);
+        preferredFullscreenVideoMode = vm;
+        if (bl) {
+            dirty = true;
+        }
+    }
+
+    void changeFullscreenVideoMode() {
+        if (fullscreen && dirty) {
+            dirty = false;
+            setMode();
+            //TODO:implement this
+            //eventHandler.resizeDisplay();
+        }
+    }
+
+    void setMode() {
+        bool bl;
+        //TODO:implement this
+        //RenderSystem.assertInInitPhase();
+        bool bl2 = bl = glfwGetWindowMonitor(window) != 0L;
+        if (fullscreen) {
+            //TODO: implement this
+            //GLFWmonitor* _monitor = screenManager.findBestGLFWMonitor(this);
+            //if (_monitor == nullptr) {
+            //    spdlog::warn("Failed to find suitable monitor for fullscreen mode");
+            //    fullscreen = false;
+            //} else {
+            //    //TODO:mac compatibility
+            //    //if (Minecraft.ON_OSX) {
+            //    //    MacosUtil.toggleFullscreen(window);
+            //    //}
+            //    VideoMode videoMode = monitor.getPreferredVidMode(preferredFullscreenVideoMode);
+            //    if (!bl) {
+            //        windowedX = posx;
+            //        windowedY = posy;
+            //        windowedWidth = width;
+            //        windowedHeight = height;
+            //    }
+            //    posx = 0;
+            //    posy = 0;
+            //    width = videoMode.width;
+            //    height = videoMode.height;
+            //    glfwSetWindowMonitor(window, monitor.getGLFWMonitor(), (int)posx, (int)posy, (int)width, (int)height, (int)videoMode.refreshRate);
+           // }
+        } else {
+            posx = windowedX;
+            posy = windowedY;
+            width = windowedWidth;
+            height = windowedHeight;
+            glfwSetWindowMonitor(window, NULL, (int)posx, (int)posy, (int)width, (int)height, (int)-1);
+        }
+    }
+
+    void toggleFullScreen() {
+        fullscreen = !fullscreen;
+    }
+
+    void setWindowed(int _windowedWidth, int _windowedHeight) {
+        windowedWidth = _windowedWidth;
+        windowedHeight = _windowedHeight;
+        fullscreen = false;
+        setMode();
+    }
     //void updateFullscreen(bool bl) {
     //    RenderSystem.assertOnRenderThread();
     //    try {
@@ -342,7 +324,7 @@ class Window{
     //        updateDisplay();
     //    }
     //    catch (Exception exception) {
-    //        LOGGER.error("Couldn't toggle fullscreen", (Throwable)exception);
+    //        spdlog::error("Couldn't toggle fullscreen");
     //    }
     //}
 //

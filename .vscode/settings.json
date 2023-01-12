@@ -49,7 +49,20 @@
         "unordered_set": "cpp",
         "ratio": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "list": "cpp",
+        "bitset": "cpp",
+        "charconv": "cpp",
+        "condition_variable": "cpp",
+        "cstring": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "regex": "cpp",
+        "future": "cpp",
+        "iomanip": "cpp",
+        "mutex": "cpp",
+        "shared_mutex": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
