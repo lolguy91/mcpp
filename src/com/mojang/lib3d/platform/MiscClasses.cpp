@@ -1,5 +1,5 @@
 #include <src/com/mojang/lib3d/platform/MiscClasses.h>
-
+#include <spdlog/spdlog.h>
     VideoMode::VideoMode(int n, int n2, int n3, int n4, int n5, int n6) {
         width = n;
         height = n2;
@@ -19,7 +19,6 @@
     }
 
     bool VideoMode::equals(VideoMode videoMode) {
-        VideoMode videoMode = (VideoMode)videoMode;
         return  width       == videoMode.width &&
                 height      == videoMode.height &&
                 redBits     == videoMode.redBits &&
@@ -29,8 +28,9 @@
     }
     //Monitor
 
-    Monitor::Monitor(GLFWmonitor* monitor) {
-        monitor = monitor;
+    Monitor::Monitor(GLFWmonitor* _monitor) {
+
+        monitor = _monitor;
         refreshVideoModes();
     }
 
@@ -40,6 +40,10 @@
         //RenderSystem.assertInInitPhase();
         videoModes.clear();
         int count;
+        if (monitor == NULL){
+            spdlog::error("monitor is null when trying to refresh video modes");
+            __glibcxx_assert(true);
+        }
         const GLFWvidmode* buffer = glfwGetVideoModes(monitor,&count);
         for (int i = count - 1; i >= 0; --i) {
             vidmode = VideoMode(buffer[i]);
@@ -51,7 +55,7 @@
         currentMode = VideoMode(*gLFWVidMode);
     }
 
-    VideoMode Monitor::getPreferredVidMode(VideoMode videoMode = VideoMode()) {
+    VideoMode Monitor::getPreferredVidMode(VideoMode videoMode) {
         //RenderSystem.assertInInitPhase();
         if (!videoMode.equals(VideoMode())) {
             for (VideoMode videoMode2 : videoModes) {

@@ -425,7 +425,7 @@ int hsvToRgb(float f, float f2, float f3) {
         
         default :
         std::cout << "ERROR: Something went wrong when converting from HSV to RGB. Input was " << f << ", " << f2 << ", " << f3;
-        __glibcxx_assert(false);
+        __glibcxx_assert(true);
     };
     int n2 = Clamp((int)(f5 * 255.0f), 0, 255);
     int n3 = Clamp((int)(f4 * 255.0f), 0, 255);

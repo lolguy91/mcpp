@@ -3,7 +3,7 @@
 using namespace std;
 
 int main() {
-    Window win(VideoMode(GLFWvidmode()),"2");
+    Window win(VideoMode(),"2");
     std::cout << "Hello world!" << std::endl; 
 
     while (win.shouldClose())
