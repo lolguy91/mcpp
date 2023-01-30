@@ -2,7 +2,8 @@
 #include <src/com/mojang/lib3d/platform/MiscClasses.h>
 #include <spdlog/spdlog.h>
 #include <stb/stb_image.h>
-
+class Window{
+    public:
     //GLFWErrorCallback defaultErrorCallback = GLFWErrorCallback.create((arg_0, arg_1) -> defaultErrorCallback(arg_0, arg_1));
     //WindowEventHandler eventHandler;
     //ScreenManager screenManager;
@@ -28,6 +29,51 @@
     int framerateLimit;
     bool vsync;
 
+    Window(
+        //WindowEventHandler windowEventHandler,
+        //ScreenManager screenManager,
+        //DisplayData displayData,
+        VideoMode fullscrvidmode, char* title) {
+        //RenderSystem.assertInInitPhase();
+        //screenManager = screenManager;
+        //setBootErrorCallback();
+        //setErrorSection("Pre startup");
+        //eventHandler = windowEventHandler;
+        preferredFullscreenVideoMode = fullscrvidmode;
+        //actuallyFullscreen = fullscreen = displayData.isFullscreen;
+        Monitor monitor = /*screenManager.getMonitor(*/Monitor(glfwGetPrimaryMonitor());
+        width = 800;//displayData.width > 0 ? displayData.width : 1;
+        //windowedWidth = width;
+        height = 600;//displayData.height > 0 ? displayData.height : 1;
+        //windowedHeight = height;
+        glfwDefaultWindowHints();
+        glfwWindowHint((int)139265, (int)196609);
+        glfwWindowHint((int)139275, (int)221185);
+        glfwWindowHint((int)139266, (int)3);
+        glfwWindowHint((int)139267, (int)2);
+        glfwWindowHint((int)139272, (int)204801);
+        glfwWindowHint((int)139270, (int)1);
+        window = glfwCreateWindow((int)width, (int)height, (const char*)title, (fullscreen && monitor.equals(Monitor()) ? monitor.monitor : NULL), NULL);
+        if (monitor.equals(Monitor())) {
+            VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : VideoMode());
+            windowedX = posx = monitor.x + videoMode.width / 2 - width / 2;
+            windowedY = posy = monitor.y + videoMode.height / 2 - height / 2;
+        } else {
+            int x,y;
+            glfwGetWindowPos(window, &x, &y);
+            windowedX = posx = x;
+            windowedY = posy = y;
+        }
+        glfwMakeContextCurrent(window);
+        //GL.createCapabilities();
+        setMode();
+        refreshFramebufferSize();
+        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)&onFramebufferResize);
+        glfwSetWindowPosCallback(window, (GLFWwindowposfun)&onMove);
+        glfwSetWindowSizeCallback(window, (GLFWwindowsizefun)&onResize);
+        glfwSetWindowFocusCallback(window, (GLFWwindowfocusfun)&onFocus);
+        glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)&onEnter);
+    }
 
     bool shouldClose() {
         return glfwWindowShouldClose(window);
@@ -110,7 +156,7 @@
     //    glfwSetErrorCallback(Window::bootCrash);
     //}
 //
-    //void bootCrash(int n, long l) {
+    //static void bootCrash(int n, long l) {
     //    RenderSystem.assertInInitPhase();
     //    String string = "GLFW error " + n + ": " + MemoryUtil.memUTF8((long)l);
     //    TinyFileDialogs.tinyfd_messageBox((CharSequence)"Minecraft", (CharSequence)(string + ".\n\nPlease make sure you have up-to-date drivers (see aka.ms/mcdriver for instructions)."), (CharSequence)"ok", (CharSequence)"error", (bool)false);
@@ -126,7 +172,7 @@
     }
 
     void setDefaultErrorCallback() {
-    glfwSetErrorCallback((GLFWerrorfun)&Window::defaultErrorCallback);
+    glfwSetErrorCallback((GLFWerrorfun)&defaultErrorCallback);
     }
 
     void updateVsync(bool bl) {
@@ -145,7 +191,7 @@
         glfwTerminate();
     }
 
-    void onMove(long l, int n, int n2) {
+    GLFWwindowposfun onMove(long l, int n, int n2) {
         posx = n;
         posy = n2;
     }
@@ -312,48 +358,4 @@
     //    InputConstants.updateRawMouseInput(window, bl);
     //}
 
-    void CreateWindow(
-        //WindowEventHandler windowEventHandler,
-        //ScreenManager screenManager,
-        //DisplayData displayData,
-        VideoMode fullscrvidmode, char* title) {
-        //RenderSystem.assertInInitPhase();
-        //screenManager = screenManager;
-        //setBootErrorCallback();
-        //setErrorSection("Pre startup");
-        //eventHandler = windowEventHandler;
-        preferredFullscreenVideoMode = fullscrvidmode;
-        //actuallyFullscreen = fullscreen = displayData.isFullscreen;
-        Monitor monitor = /*screenManager.getMonitor(*/Monitor(glfwGetPrimaryMonitor());
-        width = 800;//displayData.width > 0 ? displayData.width : 1;
-        //windowedWidth = width;
-        height = 600;//displayData.height > 0 ? displayData.height : 1;
-        //windowedHeight = height;
-        glfwDefaultWindowHints();
-        glfwWindowHint((int)139265, (int)196609);
-        glfwWindowHint((int)139275, (int)221185);
-        glfwWindowHint((int)139266, (int)3);
-        glfwWindowHint((int)139267, (int)2);
-        glfwWindowHint((int)139272, (int)204801);
-        glfwWindowHint((int)139270, (int)1);
-        window = glfwCreateWindow((int)width, (int)height, (const char*)title, (fullscreen && monitor.equals(Monitor()) ? monitor.monitor : NULL), NULL);
-        if (monitor.equals(Monitor())) {
-            VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : VideoMode());
-            windowedX = posx = monitor.x + videoMode.width / 2 - width / 2;
-            windowedY = posy = monitor.y + videoMode.height / 2 - height / 2;
-        } else {
-            int x,y;
-            glfwGetWindowPos(window, &x, &y);
-            windowedX = posx = x;
-            windowedY = posy = y;
-        }
-        glfwMakeContextCurrent(window);
-        //GL.createCapabilities();
-        setMode();
-        refreshFramebufferSize();
-        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)&onFramebufferResize);
-        glfwSetWindowPosCallback(window, (GLFWwindowposfun)&onMove);
-        glfwSetWindowSizeCallback(window, (GLFWwindowsizefun)&onResize);
-        glfwSetWindowFocusCallback(window, (GLFWwindowfocusfun)&onFocus);
-        glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)&onEnter);
-    }
+};
