@@ -45,7 +45,7 @@ int RandomSource::nextInt(int n) {
     int n2;
     int n3;
     if (n <= 0) {
-        __glibcxx_assert(false);
+        __glibcxx_assert(true);
     }
     if ((n & n - 1) == 0) {
         return (int)((long)n * (long)next(31) >> 31);

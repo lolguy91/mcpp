@@ -2,6 +2,9 @@
 #include <src/com/mojang/lib3d/platform/MiscClasses.h>
 #include <spdlog/spdlog.h>
 #include <stb/stb_image.h>
+
+char* errorSection = "";
+
 class Window{
     public:
     //GLFWErrorCallback defaultErrorCallback = GLFWErrorCallback.create((arg_0, arg_1) -> defaultErrorCallback(arg_0, arg_1));
@@ -24,7 +27,6 @@ class Window{
     int guiScaledWidth;
     int guiScaledHeight;
     double guiScale;
-    char* errorSection = "";
     bool dirty;
     int framerateLimit;
     bool vsync;
@@ -54,25 +56,64 @@ class Window{
         glfwWindowHint((int)139272, (int)204801);
         glfwWindowHint((int)139270, (int)1);
         window = glfwCreateWindow((int)width, (int)height, (const char*)title, (fullscreen && monitor.equals(Monitor()) ? monitor.monitor : NULL), NULL);
-        if (monitor.equals(Monitor())) {
-            VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : VideoMode());
-            windowedX = posx = monitor.x + videoMode.width / 2 - width / 2;
-            windowedY = posy = monitor.y + videoMode.height / 2 - height / 2;
-        } else {
-            int x,y;
-            glfwGetWindowPos(window, &x, &y);
-            windowedX = posx = x;
-            windowedY = posy = y;
-        }
+        //if (!(monitor.equals(Monitor()))) {
+        //    VideoMode videoMode = monitor.getPreferredVidMode(fullscreen ? preferredFullscreenVideoMode : VideoMode());
+        //    windowedX = posx = monitor.x + videoMode.width / 2 - width / 2;
+        //    windowedY = posy = monitor.y + videoMode.height / 2 - height / 2;
+        //} else {
+        //    int x,y;
+        //    glfwGetWindowPos(window, &x, &y);
+        //    windowedX = posx = x;
+        //    windowedY = posy = y;
+        //}
         glfwMakeContextCurrent(window);
         //GL.createCapabilities();
         setMode();
         refreshFramebufferSize();
-        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)&onFramebufferResize);
-        glfwSetWindowPosCallback(window, (GLFWwindowposfun)&onMove);
-        glfwSetWindowSizeCallback(window, (GLFWwindowsizefun)&onResize);
-        glfwSetWindowFocusCallback(window, (GLFWwindowfocusfun)&onFocus);
-        glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)&onEnter);
+        glfwSetWindowUserPointer(window,this);
+        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)[](GLFWwindow* _window, int n, int n2){
+
+            Window* self = (Window*)glfwGetWindowUserPointer(_window);
+
+            if (_window != self->window) {
+                return;
+            }
+            int n3 = self->width;
+            int n4 = self->height;
+            if (n == 0 || n2 == 0) {
+                return;
+            }
+            self->framebufferWidth = n;
+            self->framebufferHeight = n2;
+            if (self->width != n3 || self->height != n4) {
+            //TODO: implement this
+            //    eventHandler.resizeDisplay();
+            }
+        });//onFramebufferResize
+        glfwSetWindowPosCallback(window, (GLFWwindowposfun)[](GLFWwindow* _window, int n, int n2){
+            Window* self = (Window*)glfwGetWindowUserPointer(_window);
+            self->posx = n;
+            self->posy = n2;
+        });//onMove
+        glfwSetWindowSizeCallback(window, (GLFWwindowsizefun)[](GLFWwindow* _window, int n, int n2){
+            Window* self = (Window*)glfwGetWindowUserPointer(_window);
+            self->width = n;
+            self->height = n2;
+        });//onResize
+        glfwSetWindowFocusCallback(window, (GLFWwindowfocusfun)[](GLFWwindow* _window, int focused){
+            Window* self = (Window*)glfwGetWindowUserPointer(_window);
+            if (_window == self->window) {
+            //TODO: implement this
+            //eventHandler.setWindowActive(entered == GLFW_TRUE);
+            }
+        });//onFocus
+        glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)[](GLFWwindow* _window, int entered){
+            Window* self = (Window*)glfwGetWindowUserPointer(_window);
+            if (entered == GLFW_TRUE) {
+                //TODO: implement this
+                //eventHandler.cursorEntered();
+            }       
+        });//onEnter
     }
 
     bool shouldClose() {
@@ -162,17 +203,15 @@ class Window{
     //    TinyFileDialogs.tinyfd_messageBox((CharSequence)"Minecraft", (CharSequence)(string + ".\n\nPlease make sure you have up-to-date drivers (see aka.ms/mcdriver for instructions)."), (CharSequence)"ok", (CharSequence)"error", (bool)false);
     //    throw new WindowInitFailed(string);
     //}
-//
-    void defaultErrorCallback(int n, long l) {
+
+    void setDefaultErrorCallback() {
+    glfwSetErrorCallback((GLFWerrorfun)[](int code, const char* descriptor){
         //TODO: implement this
         //RenderSystem.assertOnRenderThread();
         spdlog::error("########## GL ERROR ##########");
         spdlog::error("@ {}", errorSection);
-        spdlog::error("{0:d}: {0:d}", n, l);
-    }
-
-    void setDefaultErrorCallback() {
-    glfwSetErrorCallback((GLFWerrorfun)&defaultErrorCallback);
+        spdlog::error("{0:d}: {}", code, descriptor);
+    });
     }
 
     void updateVsync(bool bl) {
@@ -191,27 +230,7 @@ class Window{
         glfwTerminate();
     }
 
-    GLFWwindowposfun onMove(long l, int n, int n2) {
-        posx = n;
-        posy = n2;
-    }
 
-    void onFramebufferResize(GLFWwindow* _window, int n, int n2) {
-        if (_window != window) {
-            return;
-        }
-        int n3 = width;
-        int n4 = height;
-        if (n == 0 || n2 == 0) {
-            return;
-        }
-        framebufferWidth = n;
-        framebufferHeight = n2;
-        if (width != n3 || height != n4) {
-        //TODO: implement this
-        //    eventHandler.resizeDisplay();
-        }
-    }
 
     void refreshFramebufferSize() {
         //TODO:implement this
@@ -222,24 +241,8 @@ class Window{
         framebufferHeight = y > 0 ? y : 1;
     }
 
-    void onResize(GLFWwindow* l, int n, int n2) {
-        width = n;
-        height = n2;
-    }
-
-    void onFocus(GLFWwindow* l, bool bl) {
-        if (l == window) {
-            //TODO: implement this
-            //eventHandler.setWindowActive(bl);
-        }
-    }
 //
-    void onEnter(GLFWwindow* l, bool bl) {
-        if (bl) {
-            //TODO: implement this
-            //eventHandler.cursorEntered();
-        }
-    }
+
 
     //void updateDisplay() {
     //    RenderSystem.flipFrame(window);
