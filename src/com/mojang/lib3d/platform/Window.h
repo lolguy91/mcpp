@@ -1,3 +1,14 @@
+/*
+import com.mojang.blaze3d.platform.DisplayData;
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.MacosUtil;
+import com.mojang.blaze3d.platform.ScreenManager;
+import com.mojang.blaze3d.platform.TextureUtil;
+import com.mojang.blaze3d.platform.WindowEventHandler;
+*/
+
+
 #include <GLFW/glfw3.h>
 #include <src/com/mojang/lib3d/platform/MiscClasses.h>
 #include <spdlog/spdlog.h>
