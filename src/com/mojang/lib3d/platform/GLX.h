@@ -15,9 +15,9 @@ public:
 
     static bool _shouldClose(Window window);
 
-    static void _init(int n, boolean bl);
+    static void _init(int n, bool bl);
 
     static std::string _getCpuInfo();
 
     //static void _renderCrosshair(int n, boolean bl, boolean bl2, boolean bl3);
-}
+};

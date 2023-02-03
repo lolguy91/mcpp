@@ -1,6 +1,10 @@
     
+#include <cpuid.h>
+#include <stdio.h>
 #include <src/com/mojang/lib3d/platform/GLX.h>
-    static std::string GLX::getOpenGLVersionString() {
+#include <thread>
+#include <string>
+    std::string GLX::getOpenGLVersionString() {
         //RenderSystem.assertOnRenderThread();
         if (glfwGetCurrentContext() == nullptr) {
             return "NO CONTEXT";
@@ -8,17 +12,17 @@
         //return GlStateManager._getString(7937) + " GL version " + GlStateManager._getString(7938) + ", " + GlStateManager._getString(7936);
     }
 
-    static int GLX::_getRefreshRate(Window window) {
+    int GLX::_getRefreshRate(Window window) {
         //RenderSystem.assertOnRenderThread();
-        GLFWmonitor* monitor = glfwGetWindowMonitor((long)window.getWindow());
+        GLFWmonitor* monitor = glfwGetWindowMonitor(window.window);
         if (monitor == nullptr) {
             monitor = glfwGetPrimaryMonitor();
         }
-        GLFWvidmode VidMode = monitor == 0L ? null : glfwGetVideoMode(monitor);
-        return VidMode == null ? 0 : VidMode.refreshRate;
+        const GLFWvidmode* VidMode = monitor == nullptr ? nullptr : glfwGetVideoMode(monitor);
+        return VidMode == nullptr ? 0 : VidMode->refreshRate;
     }
 
-    static long GLX::_initGlfw() {
+    long GLX::_initGlfw() {
         long time;
         //RenderSystem.assertInInitPhase();
         //Window.checkGlfwError((n, string) -> {
@@ -38,27 +42,43 @@
         return time;
     }
 
-    static bool GLX::_shouldClose(Window window) {
-        return glfwWindowShouldClose(window.getWindow());
+    bool GLX::_shouldClose(Window window) {
+        return glfwWindowShouldClose(window.window);
     }
 
-    static void GLX::_init(int n, boolean bl) {
+    void GLX::_init(int n, bool bl) {
         //RenderSystem.assertInInitPhase();
-        //try {
-        //    CentralProcessor centralProcessor = new SystemInfo().getHardware().getProcessor();
-        //    cpuInfo = String.format("%dx %s", centralProcessor.getLogicalProcessorCount(), centralProcessor.getProcessorIdentifier().getName()).replaceAll("\\s+", " ");
-        //}
-        //catch (Throwable throwable) {
-            // empty catch block
-        //}
+
+        //dogy solution I found online
+        char CPUBrandString[0x40];
+        unsigned int CPUInfo[4] = {0,0,0,0};
+
+        __cpuid(0x80000000, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+        unsigned int nExIds = CPUInfo[0];
+
+        memset(CPUBrandString, 0, sizeof(CPUBrandString));
+
+        for (unsigned int i = 0x80000000; i <= nExIds; ++i)
+        {
+            __cpuid(i, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3]);
+
+            if (i == 0x80000002)
+                memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+            else if (i == 0x80000003)
+                memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+            else if (i == 0x80000004)
+                memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+        }
+        cpuInfo = sprintf("%dx %s",CPUBrandString,std::thread::hardware_concurrency());
+
         //GlDebug.enableDebugCallback(n, bl);
     }
 
-    static std::string GLX::_getCpuInfo() {
-        return cpuInfo == null ? "<unknown>" : cpuInfo;
+    std::string GLX::_getCpuInfo() {
+        return cpuInfo == "" ? "<unknown>" : cpuInfo;
     }
 
-    //static void GLX::_renderCrosshair(int n, boolean bl, boolean bl2, boolean bl3) {
+    //void GLX::_renderCrosshair(int n, boolean bl, boolean bl2, boolean bl3) {
     //    RenderSystem.assertOnRenderThread();
     //    GlStateManager._disableTexture();
     //    GlStateManager._depthMask(false);
