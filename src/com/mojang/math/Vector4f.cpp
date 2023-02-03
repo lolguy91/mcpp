@@ -2,6 +2,7 @@
     #include <src/com/mojang/math/Vector3f.h>
     #include <src/com/mojang/math/Quaternion.h>
     #include <src/com/mojang/math/Vector4f.h>
+    #include <src/com/mojang/math/Matrix4f.h>
     #include <src/com/mojang/math/Constants.h>
     #include <src/net/minecraft/util/Math.h>
 
@@ -84,16 +85,16 @@
         return true;
     }
 
-    //void transform(Matrix4f matrix4f) {
-    //    float f =  x;
-    //    float f2 = y;
-    //    float f3 = z;
-    //    float f4 = w;
-    //    x = matrix4f.m00 * f + matrix4f.m01 * f2 + matrix4f.m02 * f3 + matrix4f.m03 * f4;
-    //    y = matrix4f.m10 * f + matrix4f.m11 * f2 + matrix4f.m12 * f3 + matrix4f.m13 * f4;
-    //    z = matrix4f.m20 * f + matrix4f.m21 * f2 + matrix4f.m22 * f3 + matrix4f.m23 * f4;
-    //    w = matrix4f.m30 * f + matrix4f.m31 * f2 + matrix4f.m32 * f3 + matrix4f.m33 * f4;
-    //}
+    void Vector4f::transform(Matrix4f matrix4f) {
+        float f =  x;
+        float f2 = y;
+        float f3 = z;
+        float f4 = w;
+        x = matrix4f.m00 * f + matrix4f.m01 * f2 + matrix4f.m02 * f3 + matrix4f.m03 * f4;
+        y = matrix4f.m10 * f + matrix4f.m11 * f2 + matrix4f.m12 * f3 + matrix4f.m13 * f4;
+        z = matrix4f.m20 * f + matrix4f.m21 * f2 + matrix4f.m22 * f3 + matrix4f.m23 * f4;
+        w = matrix4f.m30 * f + matrix4f.m31 * f2 + matrix4f.m32 * f3 + matrix4f.m33 * f4;
+    }
 
     void Vector4f::transform(Quaternion quaternion) {
         Quaternion quaternion2 = Quaternion(quaternion);

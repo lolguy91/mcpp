@@ -1,27 +1,6 @@
-/*
-import com.google.common.base.Charsets;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
-import net.minecraft.Util;
-*/
-#include <src/com/mojang/math/Matrix4f.h>
-#include <src/com/mojang/math/Vector3f.h>
-#include <src/com/mojang/math/Vector4f.h>
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
-	struct Viewport{
-        int x;
-        int y;
-        int width;
-        int height;
-    }
-
-	struct TextureState {
-        bool enable;
-        int binding;
-    }
+#include <GLFW/glfw3.h>
+#include <src/com/mojang/lib3d/platform/GLmanager.h>
 
     //bool ON_LINUX = Util.getPlatform() == Util.OS.LINUX;
     int TEXTURE_COUNT = 12;
@@ -88,9 +67,11 @@ import net.minecraft.Util;
         glBlendEquation((int)n);
     }
 
-    int _glGetProgrami(int n, int n2) {
+    int _glGetProgrami(int program, int pname) {
         //RenderSystem.assertOnRenderThread();
-        return glGetProgrami((int)n, (int)n2);
+        int params;
+        glGetProgramiv(program,pname,&params);
+        return params;
     }
 
     void _glAttachShader(int n, int n2) {
@@ -108,12 +89,9 @@ import net.minecraft.Util;
         return glCreateShader((int)n);
     }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
     void _glShaderSource(int n, std::string source) {
         //RenderSystem.assertOnRenderThread();
-            glShaderSource(n,1, source.c_str(), source.size);
+        glShaderSource(n,1, (const GLchar*const*)source.c_str(), (const GLint*)source.size());
         
     }
 
@@ -122,9 +100,11 @@ import net.minecraft.Util;
         glCompileShader((int)n);
     }
 
-    int _glGetShaderi(int n, int n2) {
+    int _glGetShaderiv(int shader, int pname) {
         //RenderSystem.assertOnRenderThread();
-        return glGetShaderi((int)n, (int)n2);
+        int params;
+        glGetShaderiv(shader,pname,&params);
+        return params;
     }
 
     void _glUseProgram(int n) {
@@ -147,14 +127,14 @@ import net.minecraft.Util;
         glLinkProgram((int)n);
     }
 
-    int _glGetUniformLocation(int n, CharSequence charSequence) {
+    int _glGetUniformLocation(int n, char* charSequence) {
         //RenderSystem.assertOnRenderThread();
-        return glGetUniformLocation((int)n, (CharSequence)charSequence);
+        return glGetUniformLocation((int)n, (char*)charSequence);
     }
 
-    void _glUniform1(int n, IntBuffer intBuffer) {
+    void _glUniform1(int n, int* intBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform1iv((int)n, (IntBuffer)intBuffer);
+        glUniform1iv((int)n,1, (int*)intBuffer);
     }
 
     void _glUniform1i(int n, int n2) {
@@ -162,115 +142,118 @@ import net.minecraft.Util;
         glUniform1i((int)n, (int)n2);
     }
 
-    void _glUniform1(int n, FloatBuffer floatBuffer) {
+    void _glUniform1(int n, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform1fv((int)n, (FloatBuffer)floatBuffer);
+        glUniform1fv((int)n,1, (float*)floatBuffer);
     }
 
-    void _glUniform2(int n, IntBuffer intBuffer) {
+    void _glUniform2(int n, int* intBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform2iv((int)n, (IntBuffer)intBuffer);
+        glUniform2iv((int)n,1, (int*)intBuffer);
     }
 
-    void _glUniform2(int n, FloatBuffer floatBuffer) {
+    void _glUniform2(int n, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform2fv((int)n, (FloatBuffer)floatBuffer);
+        glUniform2fv((int)n,1, (float*)floatBuffer);
     }
 
-    void _glUniform3(int n, IntBuffer intBuffer) {
+    void _glUniform3(int n, int* intBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform3iv((int)n, (IntBuffer)intBuffer);
+        glUniform3iv((int)n,1, (int*)intBuffer);
     }
 
-    void _glUniform3(int n, FloatBuffer floatBuffer) {
+    void _glUniform3(int n, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform3fv((int)n, (FloatBuffer)floatBuffer);
+        glUniform3fv((int)n,1, (float*)floatBuffer);
     }
 
-    void _glUniform4(int n, IntBuffer intBuffer) {
+    void _glUniform4(int n, int* intBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform4iv((int)n, (IntBuffer)intBuffer);
+        glUniform4iv((int)n,1, (int*)intBuffer);
     }
 
-    void _glUniform4(int n, FloatBuffer floatBuffer) {
+    void _glUniform4(int n, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniform4fv((int)n, (FloatBuffer)floatBuffer);
+        glUniform4fv((int)n,1, (float*)floatBuffer);
     }
 
-    void _glUniformMatrix2(int n, bool bl, FloatBuffer floatBuffer) {
+    void _glUniformMatrix2(int n, bool bl, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniformMatrix2fv((int)n, (bool)bl, (FloatBuffer)floatBuffer);
+        glUniformMatrix2fv((int)n,1, (bool)bl, (float*)floatBuffer);
     }
 
-    void _glUniformMatrix3(int n, bool bl, FloatBuffer floatBuffer) {
+    void _glUniformMatrix3(int n, bool bl, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniformMatrix3fv((int)n, (bool)bl, (FloatBuffer)floatBuffer);
+        glUniformMatrix3fv((int)n,1, (bool)bl, (float*)floatBuffer);
     }
 
-    void _glUniformMatrix4(int n, bool bl, FloatBuffer floatBuffer) {
+    void _glUniformMatrix4(int n, bool bl, float* floatBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glUniformMatrix4fv((int)n, (bool)bl, (FloatBuffer)floatBuffer);
+        glUniformMatrix4fv((int)n,1, (bool)bl, (float*)floatBuffer);
     }
 
-    int _glGetAttribLocation(int n, CharSequence charSequence) {
+    int _glGetAttribLocation(int n, char* charSequence) {
         //RenderSystem.assertOnRenderThread();
-        return glGetAttribLocation((int)n, (CharSequence)charSequence);
+        return glGetAttribLocation((int)n, (char*)charSequence);
     }
 
-    void _glBindAttribLocation(int n, int n2, CharSequence charSequence) {
+    void _glBindAttribLocation(int n, int n2, char* charSequence) {
         //RenderSystem.assertOnRenderThread();
-        glBindAttribLocation((int)n, (int)n2, (CharSequence)charSequence);
+        glBindAttribLocation((int)n, (int)n2, (char*)charSequence);
     }
 
-    int _glGenBuffers() {
+    unsigned int _glGenBuffers() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL15.glGenBuffers();
+        unsigned int vbo = 0;
+        glGenBuffers(1, &vbo);
+        return vbo;
     }
 
-    int _glGenVertexArrays() {
+    unsigned int _glGenVertexArrays() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL30.glGenVertexArrays();
+        unsigned int vao = 0;
+        glGenVertexArrays(1, &vao);
+        return vao;
     }
 
     void _glBindBuffer(int n, int n2) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL15.glBindBuffer((int)n, (int)n2);
+        glBindBuffer((int)n, (int)n2);
     }
 
     void _glBindVertexArray(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glBindVertexArray((int)n);
+        glBindVertexArray((int)n);
     }
 
-    void _glBufferData(int n, ByteBuffer byteBuffer, int n2) {
+    void _glBufferData(int buffer, void* data, int size, int usage) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL15.glBufferData((int)n, (ByteBuffer)byteBuffer, (int)n2);
+        glBufferData(buffer,size, data, usage);
     }
 
-    void _glBufferData(int n, long l, int n2) {
+    void _glBufferData(int buffer, void* data,int size, int usage) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL15.glBufferData((int)n, (long)l, (int)n2);
+        glBufferData(buffer,size,data,usage);
     }
 
-    @Nullable
-    ByteBuffer _glMapBuffer(int n, int n2) {
+    void* _glMapBuffer(int n, int n2) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL15.glMapBuffer((int)n, (int)n2);
+        return glMapBuffer((int)n, (int)n2);
     }
 
     void _glUnmapBuffer(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL15.glUnmapBuffer((int)n);
+        glUnmapBuffer((int)n);
     }
 
     void _glDeleteBuffers(int n) {
         //RenderSystem.assertOnRenderThread();
-        if (ON_LINUX) {
-            GL32C.glBindBuffer((int)34962, (int)n);
-            GL32C.glBufferData((int)34962, (long)0L, (int)35048);
-            GL32C.glBindBuffer((int)34962, (int)0);
-        }
-        GL15.glDeleteBuffers((int)n);
+        //if (ON_LINUX) {
+        //    glBindBuffer((int)34962, (int)n);
+        //    glBufferData((int)34962, (long)0L, (int)35048);
+        //    glBindBuffer((int)34962, (int)0);
+        //}
+        glDeleteBuffers(1,(const GLuint*)n);
     }
 
     void _glCopyTexSubImage2D(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8) {
@@ -280,113 +263,125 @@ import net.minecraft.Util;
 
     void _glDeleteVertexArrays(int n) {
         //RenderSystem.assertOnRenderThread();
-        GL30.glDeleteVertexArrays((int)n);
+        glDeleteVertexArrays(1,(const GLuint*)n);
     }
 
     void _glBindFramebuffer(int n, int n2) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glBindFramebuffer((int)n, (int)n2);
+        glBindFramebuffer((int)n, (int)n2);
     }
 
     void _glBlitFrameBuffer(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9, int n10) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glBlitFramebuffer((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8, (int)n9, (int)n10);
+        glBlitFramebuffer((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8, (int)n9, (int)n10);
     }
 
     void _glBindRenderbuffer(int n, int n2) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glBindRenderbuffer((int)n, (int)n2);
+        glBindRenderbuffer((int)n, (int)n2);
     }
 
     void _glDeleteRenderbuffers(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glDeleteRenderbuffers((int)n);
+        glDeleteRenderbuffers(1,(const GLuint*)n);
     }
 
     void _glDeleteFramebuffers(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glDeleteFramebuffers((int)n);
+        glDeleteFramebuffers(1,(const GLuint*)n);
     }
 
-    int _glGenFramebuffers() {
+    unsigned int _glGenFramebuffers() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL30.glGenFramebuffers();
+        unsigned int fbo;
+        glGenFramebuffers(1,&fbo);
+        return fbo;
     }
 
-    int _glGenRenderbuffers() {
+    unsigned int _glGenRenderbuffers() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL30.glGenRenderbuffers();
+        unsigned int rbo;
+        glGenRenderbuffers(1,&rbo);
+        return rbo;
     }
 
     void _glRenderbufferStorage(int n, int n2, int n3, int n4) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glRenderbufferStorage((int)n, (int)n2, (int)n3, (int)n4);
+        glRenderbufferStorage((int)n, (int)n2, (int)n3, (int)n4);
     }
 
     void _glFramebufferRenderbuffer(int n, int n2, int n3, int n4) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glFramebufferRenderbuffer((int)n, (int)n2, (int)n3, (int)n4);
+        glFramebufferRenderbuffer((int)n, (int)n2, (int)n3, (int)n4);
     }
 
     int _glCheckFramebufferStatus(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return GL30.glCheckFramebufferStatus((int)n);
+        return glCheckFramebufferStatus((int)n);
     }
 
     void _glFramebufferTexture2D(int n, int n2, int n3, int n4, int n5) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        GL30.glFramebufferTexture2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5);
+        glFramebufferTexture2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5);
     }
 
     int _getBoundFramebuffer() {
         //RenderSystem.assertOnRenderThread();
-        return _gl_getInteger(36006);
+        int data;
+        glGetIntegerv(36006,&data);
+        return data;
     }
 
     void _glActiveTexture(int n) {
         //RenderSystem.assertOnRenderThread();
-        GL13.glActiveTexture((int)n);
+        glActiveTexture((int)n);
     }
 
-    String _glGetShaderInfoLog(int n, int n2) {
+    std::string _glGetShaderInfoLog(int n, int n2) {
         //RenderSystem.assertOnRenderThread();
-        return glGetShaderInfoLog((int)n, (int)n2);
+        GLsizei length;
+        GLchar* string;
+        glGetShaderInfoLog((int)n, (int)n2,&length,string);
+        return std::string(string,length);
     }
 
-    String _glGetProgramInfoLog(int n, int n2) {
+    std::string _glGetProgramInfoLog(int n, int n2) {
         //RenderSystem.assertOnRenderThread();
-        return glGetProgramInfoLog((int)n, (int)n2);
+        GLsizei length;
+        GLchar* string;
+        glGetProgramInfoLog((int)n, (int)n2,&length,string);
+        return std::string(string,length);
     }
 
-    void _setupLevelDiffuseLighting(Vector3f vector3f, Vector3f vector3f2, Matrix4f matrix4f) {
-        //RenderSystem.assertOnRenderThread();
-        Vector4f vector4f = new Vector4f(vector3f);
-        vector4f.transform(matrix4f);
-        Vector4f vector4f2 = new Vector4f(vector3f2);
-        vector4f2.transform(matrix4f);
-        RenderSystem.setShaderLights(new Vector3f(vector4f), new Vector3f(vector4f2));
-    }
-
-    void _setupGuiFlatDiffuseLighting(Vector3f vector3f, Vector3f vector3f2) {
-        //RenderSystem.assertOnRenderThread();
-        Matrix4f matrix4f = new Matrix4f();
-        matrix4f.setIdentity();
-        matrix4f.multiply(Matrix4f.createScaleMatrix(1.0f, -1.0f, 1.0f));
-        matrix4f.multiply(Vector3f.YP.rotationDegrees(-22.5f));
-        matrix4f.multiply(Vector3f.XP.rotationDegrees(135.0f));
-        _glsetupLevelDiffuseLighting(vector3f, vector3f2, matrix4f);
-    }
-
-    void _setupGui3DDiffuseLighting(Vector3f vector3f, Vector3f vector3f2) {
-        //RenderSystem.assertOnRenderThread();
-        Matrix4f matrix4f = new Matrix4f();
-        matrix4f.setIdentity();
-        matrix4f.multiply(Vector3f.YP.rotationDegrees(62.0f));
-        matrix4f.multiply(Vector3f.XP.rotationDegrees(185.5f));
-        matrix4f.multiply(Vector3f.YP.rotationDegrees(-22.5f));
-        matrix4f.multiply(Vector3f.XP.rotationDegrees(135.0f));
-        _glsetupLevelDiffuseLighting(vector3f, vector3f2, matrix4f);
-    }
+    //void _setupLevelDiffuseLighting(Vector3f vector3f, Vector3f vector3f2, Matrix4f matrix4f) {
+    //    //RenderSystem.assertOnRenderThread();
+    //    Vector4f vector4f = Vector4f(vector3f);
+    //    vector4f.transform(matrix4f);
+    //    Vector4f vector4f2 = Vector4f(vector3f2);
+    //    vector4f2.transform(matrix4f);
+    //    RenderSystem.setShaderLights(Vector3f(vector4f), Vector3f(vector4f2));
+    //}
+//
+    //void _setupGuiFlatDiffuseLighting(Vector3f vector3f, Vector3f vector3f2) {
+    //    //RenderSystem.assertOnRenderThread();
+    //    Matrix4f matrix4f = Matrix4f();
+    //    matrix4f.setIdentity();
+    //    matrix4f.multiply(Matrix4f.createScaleMatrix(1.0f, -1.0f, 1.0f));
+    //    matrix4f.multiply(Vector3f.YP.rotationDegrees(-22.5f));
+    //    matrix4f.multiply(Vector3f.XP.rotationDegrees(135.0f));
+    //    _glsetupLevelDiffuseLighting(vector3f, vector3f2, matrix4f);
+    //}
+//
+    //void _setupGui3DDiffuseLighting(Vector3f vector3f, Vector3f vector3f2) {
+    //    //RenderSystem.assertOnRenderThread();
+    //    Matrix4f matrix4f = Matrix4f();
+    //    matrix4f.setIdentity();
+    //    matrix4f.multiply(Vector3f.YP.rotationDegrees(62.0f));
+    //    matrix4f.multiply(Vector3f.XP.rotationDegrees(185.5f));
+    //    matrix4f.multiply(Vector3f.YP.rotationDegrees(-22.5f));
+    //    matrix4f.multiply(Vector3f.XP.rotationDegrees(135.0f));
+    //    _glsetupLevelDiffuseLighting(vector3f, vector3f2, matrix4f);
+    //}
 
     void _enableCull() {
         //RenderSystem.assertOnRenderThread();
@@ -405,57 +400,50 @@ import net.minecraft.Util;
 
     void _enablePolygonOffset() {
         //RenderSystem.assertOnRenderThread();
-        _glPOLY_OFFSET.fill.enable();
+        glEnable(GL_POLYGON_OFFSET_FILL);
     }
 
     void _disablePolygonOffset() {
         //RenderSystem.assertOnRenderThread();
-        _glPOLY_OFFSET.fill.disable();
+        glDisable(GL_POLYGON_OFFSET_FILL);
     }
 
     void _polygonOffset(float f, float f2) {
         //RenderSystem.assertOnRenderThread();
-        if (f != _glPOLY_OFFSET.factor || f2 != _glPOLY_OFFSET.units) {
-            _glPOLY_OFFSET.factor = f;
-            _glPOLY_OFFSET.units = f2;
-            glPolygonOffset((float)f, (float)f2);
-        }
+        glPolygonOffset((float)f, (float)f2);
     }
 
     void _enableColorLogicOp() {
         //RenderSystem.assertOnRenderThread();
-        glEnable(3058);//idk wtf is dat shit
+        glEnable(GL_COLOR_LOGIC_OP);//idk wtf is dat shit
     }
 
     void _disableColorLogicOp() {
         //RenderSystem.assertOnRenderThread();
-        glDisable(3058);//idk wtf is dat shit
+        glDisable(GL_COLOR_LOGIC_OP);
     }
 
     void _logicOp(int n) {
         //RenderSystem.assertOnRenderThread();
-        if (n != _glCOLOR_LOGIC.op) {
-            _glCOLOR_LOGIC.op = n;
-            glLogicOp((int)n);
-        }
+        glLogicOp((int)n);
     }
 
     void _activeTexture(int n) {
         //RenderSystem.assertOnRenderThread();
         if (activeTexture != n - 33984) {
             activeTexture = n - 33984;
-            _glglActiveTexture(n);
+            glActiveTexture(n);
         }
     }
 
     void _enableTexture() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        _glTEXTURES[_glactiveTexture].enable = true;
+        TEXTURES[activeTexture].enable = true;
     }
 
     void _disableTexture() {
         //RenderSystem.assertOnRenderThread();
-        _glTEXTURES[_glactiveTexture].enable = false;
+        TEXTURES[activeTexture].enable = false;
     }
 
     void _texParameter(int n, int n2, float f) {
@@ -469,30 +457,34 @@ import net.minecraft.Util;
     }
 
     int _getTexLevelParameter(int n, int n2, int n3) {
-        RenderSystem.assertInInitPhase();
-        return glGetTexLevelParameteri((int)n, (int)n2, (int)n3);
+        //RenderSystem.assertInInitPhase();
+        int params;
+        glGetTexLevelParameteriv((int)n, (int)n2, (int)n3,&params);
+        return params;
     }
 
-    int _genTexture() {
+    unsigned int _genTexture() {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return glGenTextures();
+        unsigned int tex;
+        glGenTextures(1,&tex);
+        return tex;
     }
 
-    void _genTextures(int[] arrn) {
+    void _genTextures(unsigned int* arrn) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        glGenTextures((int[])arrn);
+        glGenTextures(1,arrn);
     }
 
-    void _deleteTexture(int n) {
+    void _deleteTexture(unsigned int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        glDeleteTextures((int)n);
+        glDeleteTextures(1,&n);
         for (TextureState textureState : TEXTURES) {
             if (textureState.binding != n) continue;
             textureState.binding = -1;
         }
     }
 
-    void _deleteTextures(int[] arrn) {
+    void _deleteTextures(std::vector<unsigned int> arrn) {
         //RenderSystem.assertOnRenderThreadOrInit();
         for (TextureState textureState : TEXTURES) {
             for (int n : arrn) {
@@ -500,20 +492,20 @@ import net.minecraft.Util;
                 textureState.binding = -1;
             }
         }
-        glDeleteTextures((int[])arrn);
+        glDeleteTextures(arrn.size(),arrn.data());
     }
 
     void _bindTexture(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        if (n != _glTEXTURES[_glactiveTexture].binding) {
-            _glTEXTURES[_glactiveTexture].binding = n;
+        if (n != TEXTURES[activeTexture].binding) {
+            TEXTURES[activeTexture].binding = n;
             glBindTexture((int)3553, (int)n);
         }
     }
 
     int _getTextureId(int n) {
-        if (n >= 0 && n < 12 && _glTEXTURES[n].enable) {
-            return _glTEXTURES[n].binding;
+        if (n >= 0 && n < 12 && TEXTURES[n].enable) {
+            return TEXTURES[n].binding;
         }
         return 0;
     }
@@ -522,67 +514,44 @@ import net.minecraft.Util;
         return activeTexture + 33984;
     }
 
-    void _texImage2D(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, @Nullable IntBuffer intBuffer) {
+    void _texImage2D(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int* intBuffer) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        glTexImage2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8, (IntBuffer)intBuffer);
+        glTexImage2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8, (int*)intBuffer);
     }
 
-    void _texSubImage2D(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, long l) {
+    void _texSubImage2D(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, void* l) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        glTexSubImage2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8, (long)l);
+        glTexSubImage2D((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (int)n7, (int)n8,l);
     }
 
-    void _getTexImage(int n, int n2, int n3, int n4, long l) {
+    void _getTexImage(int n, int n2, int n3, int n4, void* l) {
         //RenderSystem.assertOnRenderThread();
-        glGetTexImage((int)n, (int)n2, (int)n3, (int)n4, (long)l);
+        glGetTexImage((int)n, (int)n2, (int)n3, (int)n4,l);
     }
 
     void _viewport(int n, int n2, int n3, int n4) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        Viewport.INSTANCE.x = n;
-        Viewport.INSTANCE.y = n2;
-        Viewport.INSTANCE.width = n3;
-        Viewport.INSTANCE.height = n4;
         glViewport((int)n, (int)n2, (int)n3, (int)n4);
     }
 
     void _colorMask(bool bl, bool bl2, bool bl3, bool bl4) {
         //RenderSystem.assertOnRenderThread();
-        if (bl != _glCOLOR_MASK.red || bl2 != _glCOLOR_MASK.green || bl3 != _glCOLOR_MASK.blue || bl4 != _glCOLOR_MASK.alpha) {
-            _glCOLOR_MASK.red = bl;
-            _glCOLOR_MASK.green = bl2;
-            _glCOLOR_MASK.blue = bl3;
-            _glCOLOR_MASK.alpha = bl4;
-            glColorMask((bool)bl, (bool)bl2, (bool)bl3, (bool)bl4);
-        }
+        glColorMask((bool)bl, (bool)bl2, (bool)bl3, (bool)bl4);
     }
 
     void _stencilFunc(int n, int n2, int n3) {
         //RenderSystem.assertOnRenderThread();
-        if (n != _glSTENCIL.func.func || n != _glSTENCIL.func.ref || n != _glSTENCIL.func.mask) {
-            _glSTENCIL.func.func = n;
-            _glSTENCIL.func.ref = n2;
-            _glSTENCIL.func.mask = n3;
-            glStencilFunc((int)n, (int)n2, (int)n3);
-        }
+        glStencilFunc((int)n, (int)n2, (int)n3);
     }
 
     void _stencilMask(int n) {
         //RenderSystem.assertOnRenderThread();
-        if (n != _glSTENCIL.mask) {
-            _glSTENCIL.mask = n;
             glStencilMask((int)n);
-        }
     }
 
     void _stencilOp(int n, int n2, int n3) {
         //RenderSystem.assertOnRenderThread();
-        if (n != _glSTENCIL.fail || n2 != _glSTENCIL.zfail || n3 != _glSTENCIL.zpass) {
-            _glSTENCIL.fail = n;
-            _glSTENCIL.zfail = n2;
-            _glSTENCIL.zpass = n3;
             glStencilOp((int)n, (int)n2, (int)n3);
-        }
     }
 
     void _clearDepth(double d) {
@@ -604,23 +573,23 @@ import net.minecraft.Util;
         //RenderSystem.assertOnRenderThreadOrInit();
         glClear((int)n);
         if (bl) {
-            _gl_getError();
+            glGetError();
         }
     }
 
-    void _glDrawPixels(int n, int n2, int n3, int n4, long l) {
+    void _glDrawPixels(int n, int n2, int n3, int n4, void* l) {
         //RenderSystem.assertOnRenderThread();
-        glDrawPixels((int)n, (int)n2, (int)n3, (int)n4, (long)l);
+        glDrawPixels((int)n, (int)n2, (int)n3, (int)n4,l);
     }
 
-    void _vertexAttribPointer(int n, int n2, int n3, bool bl, int n4, long l) {
+    void _vertexAttribPointer(int n, int n2, int n3, bool bl, int n4, const void* l) {
         //RenderSystem.assertOnRenderThread();
-        glVertexAttribPointer((int)n, (int)n2, (int)n3, (bool)bl, (int)n4, (long)l);
+        glVertexAttribPointer((int)n, (int)n2, (int)n3, (bool)bl, (int)n4,l);
     }
 
-    void _vertexAttribIPointer(int n, int n2, int n3, int n4, long l) {
+    void _vertexAttribIPointer(int n, int n2, int n3, int n4, const void* l) {
         //RenderSystem.assertOnRenderThread();
-        GL30.glVertexAttribIPointer((int)n, (int)n2, (int)n3, (int)n4, (long)l);
+        glVertexAttribIPointer((int)n, (int)n2, (int)n3, (int)n4, l);
     }
 
     void _enableVertexAttribArray(int n) {
@@ -633,9 +602,9 @@ import net.minecraft.Util;
         glDisableVertexAttribArray((int)n);
     }
 
-    void _drawElements(int n, int n2, int n3, long l) {
+    void _drawElements(int n, int n2, int n3, void* l) {
         //RenderSystem.assertOnRenderThread();
-        glDrawElements((int)n, (int)n2, (int)n3, (long)l);
+        glDrawElements((int)n, (int)n2, (int)n3,l);
     }
 
     void _pixelStore(int n, int n2) {
@@ -643,14 +612,14 @@ import net.minecraft.Util;
         glPixelStorei((int)n, (int)n2);
     }
 
-    void _readPixels(int n, int n2, int n3, int n4, int n5, int n6, ByteBuffer byteBuffer) {
+    void _readPixels(int n, int n2, int n3, int n4, int n5, int n6, void* byteBuffer) {
         //RenderSystem.assertOnRenderThread();
-        glReadPixels((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (ByteBuffer)byteBuffer);
+        glReadPixels((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, byteBuffer);
     }
 
-    void _readPixels(int n, int n2, int n3, int n4, int n5, int n6, long l) {
+    void _readPixels(int n, int n2, int n3, int n4, int n5, int n6, void* l) {
         //RenderSystem.assertOnRenderThread();
-        glReadPixels((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, (long)l);
+        glReadPixels((int)n, (int)n2, (int)n3, (int)n4, (int)n5, (int)n6, l);
     }
 
     int _getError() {
@@ -658,172 +627,19 @@ import net.minecraft.Util;
         return glGetError();
     }
 
-    String _getString(int n) {
+    std::string _getString(int n) {
         //RenderSystem.assertOnRenderThread();
-        return glGetString((int)n);
+        return std::string((char*)glGetString((n)));
     }
 
     int _getInteger(int n) {
         //RenderSystem.assertOnRenderThreadOrInit();
-        return glGetInteger((int)n);
+        int n2;
+        glGetIntegerv(n,&n2);
+        return n2;
     }
 
+    void init()
     {
-        TEXTURES = (TextureState[])IntStream.range(0, 12).mapToObj(n -> new TextureState()).toArray(TextureState[]::new);
-        COLOR_MASK = new ColorMask();
-    }
-
-    class ColorMask {
-        bool red = true;
-        bool green = true;
-        bool blue = true;
-        bool alpha = true;
-
-        ColorMask() {
-        }
-    }
-
-    class StencilState {
-        StencilFunc func = new StencilFunc();
-        int mask = -1;
-        int fail = 7680;
-        int zfail = 7680;
-        int zpass = 7680;
-
-        StencilState() {
-        }
-    }
-
-    class StencilFunc {
-        int func = 519;
-        int ref;
-        int mask = -1;
-
-        StencilFunc() {
-        }
-    }
-
-    @DontObfuscate
-    class DestFactor
-    extends Enum<DestFactor> {
-        final /* enum */ DestFactor CONSTANT_ALPHA = new DestFactor(32771);
-        final /* enum */ DestFactor CONSTANT_COLOR = new DestFactor(32769);
-        final /* enum */ DestFactor DST_ALPHA = new DestFactor(772);
-        final /* enum */ DestFactor DST_COLOR = new DestFactor(774);
-        final /* enum */ DestFactor ONE = new DestFactor(1);
-        final /* enum */ DestFactor ONE_MINUS_CONSTANT_ALPHA = new DestFactor(32772);
-        final /* enum */ DestFactor ONE_MINUS_CONSTANT_COLOR = new DestFactor(32770);
-        final /* enum */ DestFactor ONE_MINUS_DST_ALPHA = new DestFactor(773);
-        final /* enum */ DestFactor ONE_MINUS_DST_COLOR = new DestFactor(775);
-        final /* enum */ DestFactor ONE_MINUS_SRC_ALPHA = new DestFactor(771);
-        final /* enum */ DestFactor ONE_MINUS_SRC_COLOR = new DestFactor(769);
-        final /* enum */ DestFactor SRC_ALPHA = new DestFactor(770);
-        final /* enum */ DestFactor SRC_COLOR = new DestFactor(768);
-        final /* enum */ DestFactor ZERO = new DestFactor(0);
-        int value;
-        final /* synthetic */ DestFactor[] $VALUES;
-
-        DestFactor[] values() {
-            return (DestFactor[])$VALUES.clone();
-        }
-
-        DestFactor valueOf(String string) {
-            return Enum.valueOf(DestFactor.class, string);
-        }
-
-        DestFactor(int n2) {
-            this.value = n2;
-        }
-
-        /* synthetic */ DestFactor[] $values() {
-            return new DestFactor[]{CONSTANT_ALPHA, CONSTANT_COLOR, DST_ALPHA, DST_COLOR, ONE, ONE_MINUS_CONSTANT_ALPHA, ONE_MINUS_CONSTANT_COLOR, ONE_MINUS_DST_ALPHA, ONE_MINUS_DST_COLOR, ONE_MINUS_SRC_ALPHA, ONE_MINUS_SRC_COLOR, SRC_ALPHA, SRC_COLOR, ZERO};
-        }
-
-        {
-            $VALUES = DestFactor.$values();
-        }
-    }
-
-    @DontObfuscate
-    class SourceFactor
-    extends Enum<SourceFactor> {
-        final /* enum */ SourceFactor CONSTANT_ALPHA = new SourceFactor(32771);
-        final /* enum */ SourceFactor CONSTANT_COLOR = new SourceFactor(32769);
-        final /* enum */ SourceFactor DST_ALPHA = new SourceFactor(772);
-        final /* enum */ SourceFactor DST_COLOR = new SourceFactor(774);
-        final /* enum */ SourceFactor ONE = new SourceFactor(1);
-        final /* enum */ SourceFactor ONE_MINUS_CONSTANT_ALPHA = new SourceFactor(32772);
-        final /* enum */ SourceFactor ONE_MINUS_CONSTANT_COLOR = new SourceFactor(32770);
-        final /* enum */ SourceFactor ONE_MINUS_DST_ALPHA = new SourceFactor(773);
-        final /* enum */ SourceFactor ONE_MINUS_DST_COLOR = new SourceFactor(775);
-        final /* enum */ SourceFactor ONE_MINUS_SRC_ALPHA = new SourceFactor(771);
-        final /* enum */ SourceFactor ONE_MINUS_SRC_COLOR = new SourceFactor(769);
-        final /* enum */ SourceFactor SRC_ALPHA = new SourceFactor(770);
-        final /* enum */ SourceFactor SRC_ALPHA_SATURATE = new SourceFactor(776);
-        final /* enum */ SourceFactor SRC_COLOR = new SourceFactor(768);
-        final /* enum */ SourceFactor ZERO = new SourceFactor(0);
-        int value;
-        final /* synthetic */ SourceFactor[] $VALUES;
-
-        SourceFactor[] values() {
-            return (SourceFactor[])$VALUES.clone();
-        }
-
-        SourceFactor valueOf(String string) {
-            return Enum.valueOf(SourceFactor.class, string);
-        }
-
-        SourceFactor(int n2) {
-            this.value = n2;
-        }
-
-        /* synthetic */ SourceFactor[] $values() {
-            return new SourceFactor[]{CONSTANT_ALPHA, CONSTANT_COLOR, DST_ALPHA, DST_COLOR, ONE, ONE_MINUS_CONSTANT_ALPHA, ONE_MINUS_CONSTANT_COLOR, ONE_MINUS_DST_ALPHA, ONE_MINUS_DST_COLOR, ONE_MINUS_SRC_ALPHA, ONE_MINUS_SRC_COLOR, SRC_ALPHA, SRC_ALPHA_SATURATE, SRC_COLOR, ZERO};
-        }
-
-        {
-            $VALUES = SourceFactor.$values();
-        }
-    }
-
-    class LogicOp
-    extends Enum<LogicOp> {
-        final /* enum */ LogicOp AND = new LogicOp(5377);
-        final /* enum */ LogicOp AND_INVERTED = new LogicOp(5380);
-        final /* enum */ LogicOp AND_REVERSE = new LogicOp(5378);
-        final /* enum */ LogicOp CLEAR = new LogicOp(5376);
-        final /* enum */ LogicOp COPY = new LogicOp(5379);
-        final /* enum */ LogicOp COPY_INVERTED = new LogicOp(5388);
-        final /* enum */ LogicOp EQUIV = new LogicOp(5385);
-        final /* enum */ LogicOp INVERT = new LogicOp(5386);
-        final /* enum */ LogicOp NAND = new LogicOp(5390);
-        final /* enum */ LogicOp NOOP = new LogicOp(5381);
-        final /* enum */ LogicOp NOR = new LogicOp(5384);
-        final /* enum */ LogicOp OR = new LogicOp(5383);
-        final /* enum */ LogicOp OR_INVERTED = new LogicOp(5389);
-        final /* enum */ LogicOp OR_REVERSE = new LogicOp(5387);
-        final /* enum */ LogicOp SET = new LogicOp(5391);
-        final /* enum */ LogicOp XOR = new LogicOp(5382);
-        int value;
-        final /* synthetic */ LogicOp[] $VALUES;
-
-        LogicOp[] values() {
-            return (LogicOp[])$VALUES.clone();
-        }
-
-        LogicOp valueOf(String string) {
-            return Enum.valueOf(LogicOp.class, string);
-        }
-
-        LogicOp(int n2) {
-            this.value = n2;
-        }
-
-        /* synthetic */ LogicOp[] $values() {
-            return new LogicOp[]{AND, AND_INVERTED, AND_REVERSE, CLEAR, COPY, COPY_INVERTED, EQUIV, INVERT, NAND, NOOP, NOR, OR, OR_INVERTED, OR_REVERSE, SET, XOR};
-        }
-
-        {
-            $VALUES = LogicOp.$values();
-        }
+        COLOR_MASK = ColorMask();
     }

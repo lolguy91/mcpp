@@ -25,8 +25,7 @@ class Vector4f {
     float dot(Vector4f vector4f);
     bool normalize();
 
-    //void transform(Matrix4f matrix4f);
-
+    void transform(Matrix4f matrix4f);
     void transform(Quaternion quaternion);
     void perspectiveDivide();
     void lerp(Vector4f vector4f, float f);

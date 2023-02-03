@@ -62,7 +62,8 @@
         "iomanip": "cpp",
         "mutex": "cpp",
         "shared_mutex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "codecvt": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
