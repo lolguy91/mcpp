@@ -1,14 +1,32 @@
-#include <src/com/mojang/lib3d/platform/Window.h>
 #include <iostream>
-using namespace std;
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 int main() {
-    Window win(VideoMode(),"2");
-    std::cout << "Hello world!" << std::endl; 
+    GLFWwindow* window;
+ 
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
+ 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+ 
+    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+ 
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
-    while (win.shouldClose())
+ 
+    while (!glfwWindowShouldClose(window))
     {
-        
+        glClear(GL_COLOR_BUFFER_BIT);
+ 
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
-    win.close();
+ 
+    glfwDestroyWindow(window);
+ 
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
 }
