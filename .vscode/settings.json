@@ -63,7 +63,24 @@
         "mutex": "cpp",
         "shared_mutex": "cpp",
         "variant": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "csignal": "cpp",
+        "any": "cpp",
+        "hash_map": "cpp",
+        "strstream": "cpp",
+        "cfenv": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "forward_list": "cpp",
+        "source_location": "cpp",
+        "numbers": "cpp",
+        "ranges": "cpp",
+        "semaphore": "cpp",
+        "span": "cpp",
+        "stop_token": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

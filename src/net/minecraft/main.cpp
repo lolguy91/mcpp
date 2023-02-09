@@ -1,32 +1,40 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Minecraft.h"
 
 int main() {
-    GLFWwindow* window;
- 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
- 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
- 
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
- 
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+     GLFWwindow* window;
 
- 
-    while (!glfwWindowShouldClose(window))
+    /* Initialize the library */
+    if (!glfwInit())
+        return -1;
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Minecraft", NULL, NULL);
+    if (!window)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+    
+    MCinit(GameConfig(),window);
  
+    /* Loop until the user closes the window */
+    while (IsRunning())
+    {
+
+        MCupdate();
+
+        /* Swap front and back buffers */
         glfwSwapBuffers(window);
+
+        /* Poll for and process events */
         glfwPollEvents();
     }
- 
-    glfwDestroyWindow(window);
- 
+
     glfwTerminate();
-    exit(EXIT_SUCCESS);
 }
