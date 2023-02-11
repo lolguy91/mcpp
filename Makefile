@@ -36,3 +36,6 @@ game: $(OBJ)
 
 clean:
 	rm -rf $(BIN) $(OBJ)
+
+getassets:
+	rm -rf ./res/mc && python tools/getassets.py
