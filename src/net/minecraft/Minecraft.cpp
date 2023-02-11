@@ -1,12 +1,18 @@
-
-#include "Minecraft.h"
 #include <stb/stb_image.h>
 #include <spdlog/spdlog.h>
 #include <stdio.h>
 
+#include "Minecraft.h"
+#include "render/render.h"
+
 GameConfig config;
 GLFWwindow* window;
 bool running;
+
+void errorcallback(int error_code, const char* description){
+    spdlog::error("OpenGL Error(code:{} ): {}",error_code,description);
+}
+
 void SetIcon(){
     unsigned char* pixloc = nullptr;;
     int width,height,channels;
@@ -16,7 +22,6 @@ void SetIcon(){
     if (pixloc == nullptr){
         spdlog::error("Could not set icon: image loading failed");
     }
-
     GLFWimage iconimg;
     iconimg.pixels = pixloc;
     iconimg.height = height;
@@ -35,6 +40,7 @@ void updateTitle(){
     glfwSetWindowTitle(window,title.c_str());
 }
 void close(){
+    
    running = false;
 }
 
@@ -53,13 +59,21 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     SetIcon();
     updateTitle();
 
+    //initialize OpenGL
+    glfwSetErrorCallback((GLFWerrorfun)&errorcallback);
+    initGlad();
     glClearColor(0,0,0,0);
+
+    //initialize other stuff
+    CreateCrosshair();
 
     spdlog::info("Initialization done!");
 }
 void MCupdate()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    renderCrosshair();
 
     if(glfwWindowShouldClose(window))
         close();

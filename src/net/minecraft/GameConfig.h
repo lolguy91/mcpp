@@ -1,6 +1,7 @@
 #ifndef __GAMECONFIG_H__
 #define __GAMECONFIG_H__
 #include <iostream>
+#include "User.h"
 //struct UserData {
 //    User user;
 //    PropertyMap userProperties;
@@ -59,14 +60,14 @@ struct ServerData {
 
 class GameConfig {
     public:
-    //UserData user;
+    User user;
     //DisplayData display;
     FolderData location;
     GameData game;
     ServerData server;
     GameConfig(){}
-    GameConfig(/*UserData userData, DisplayData displayData,*/ FolderData folderData, GameData gameData, ServerData serverData) {
-        //user = userData;
+    GameConfig(User _user,/* DisplayData displayData,*/ FolderData folderData, GameData gameData, ServerData serverData) {
+        user = _user;
         //display = displayData;
         location = folderData;
         game = gameData;
