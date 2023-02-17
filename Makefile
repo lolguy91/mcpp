@@ -9,7 +9,7 @@ LDFLAGS = lib/glad/src/glad.o lib/glfw/src/libglfw3.a -ldl -lpthread -lGL
 
 
 
-SRC  = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp) $(wildcard src/**/**/**/**/*.cpp) $(wildcard src/**/**/**/**/*.cpp)
+SRC  = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp) $(wildcard src/**/**/**/**/*.cpp) $(wildcard src/**/**/**/**/**/*.cpp) $(wildcard src/**/**/**/**/**/**/*.cpp)
 OBJ  = $(SRC:.cpp=.o)
 BIN  = ./bin
 
@@ -38,4 +38,4 @@ clean:
 	rm -rf $(BIN) $(OBJ)
 
 getassets:
-	rm -rf ./res/mc && python tools/getassets.py
+	python tools/getassets.py

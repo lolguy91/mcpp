@@ -2,11 +2,14 @@
 #include <spdlog/spdlog.h>
 #include <stdio.h>
 
+#include "render/Window.h"
 #include "Minecraft.h"
 #include "render/render.h"
+#include "render/gui/test.h"
 
 GameConfig config;
-GLFWwindow* window;
+Window window;
+Test test;
 bool running;
 
 void errorcallback(int error_code, const char* description){
@@ -17,16 +20,29 @@ void SetIcon(){
     unsigned char* pixloc = nullptr;;
     int width,height,channels;
 
-    pixloc = stbi_load("./res/icon.png",&width,&height,&channels,0);
+    unsigned char* pixloc2 = nullptr;;
+    int width2,height2,channels2;
+
+    pixloc = stbi_load("./res/mc/assets/icons/icon_16x16.png",&width,&height,&channels,0);
+
+    pixloc2 = stbi_load("./res/mc/assets/icons/icon_32x32.png",&width2,&height2,&channels2,0);
 
     if (pixloc == nullptr){
-        spdlog::error("Could not set icon: image loading failed");
+        spdlog::error("Could not set 16x icon: image loading failed");
     }
-    GLFWimage iconimg;
-    iconimg.pixels = pixloc;
-    iconimg.height = height;
-    iconimg.width  = width;
-    glfwSetWindowIcon(window,1,&iconimg);
+
+    if (pixloc2 == nullptr){
+        spdlog::error("Could not set 32x icon: image loading failed");
+    }
+    GLFWimage iconimgs[2];
+    iconimgs[0].pixels = pixloc;
+    iconimgs[0].height = height;
+    iconimgs[0].width  = width;
+
+    iconimgs[1].pixels = pixloc2;
+    iconimgs[1].height = height2;
+    iconimgs[1].width  = width2;
+    glfwSetWindowIcon(window.nativeWindow,2,iconimgs);
 }
 
 void updateTitle(){
@@ -37,7 +53,7 @@ void updateTitle(){
 
     title = std::string(titlechar);
 
-    glfwSetWindowTitle(window,title.c_str());
+    glfwSetWindowTitle(window.nativeWindow,title.c_str());
 }
 void close(){
     
@@ -53,29 +69,35 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     running = true;
     //save the stuff
     config = _config;
-    window = _window;
+    window = Window(_window);
 
     //set the icon and title
     SetIcon();
     updateTitle();
 
     //initialize OpenGL
-    glfwSetErrorCallback((GLFWerrorfun)&errorcallback);
     initGlad();
+
+    //glEnable(GL_DEBUG_OUTPUT);
+    glfwSetErrorCallback((GLFWerrorfun)&errorcallback);
+    
     glClearColor(0,0,0,0);
 
     //initialize other stuff
     CreateCrosshair();
+    test.prepare();
 
     spdlog::info("Initialization done!");
 }
 void MCupdate()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    test.update();
+    test.draw();
 
     renderCrosshair();
 
-    if(glfwWindowShouldClose(window))
+    if(glfwWindowShouldClose(window.nativeWindow))
         close();
 }
 
