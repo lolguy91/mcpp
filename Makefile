@@ -1,9 +1,7 @@
 UNAME_S = $(shell uname -s)
 
 CC = clang++
-CFLAGS = -O2 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing -Wc++11-narrowing -Wvla-extension
-CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter -Wno-gnu-statement-expression
-CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arguments
+CFLAGS = -O2 -g
 CFLAGS += -Ilib/glad/include -Ilib/glfw/include -Ilib/ConcurrentQueue -Isrc -Ivendor/ -I.
 LDFLAGS = lib/glad/src/glad.o lib/glfw/src/libglfw3.a -ldl -lpthread -lGL
 

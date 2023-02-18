@@ -8,10 +8,10 @@ gui::~gui()
 }
 
 
-void gui::prepare(){
+void gui::prepare(Window context){
 for (widget w : widgets)
 {
-    w.prepare();
+    w.prepare(context);
 }
 
 }

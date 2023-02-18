@@ -1,6 +1,6 @@
 #ifndef __WIDGET_H__
 #define __WIDGET_H__
-
+#include <net/minecraft/render/Window.h>
 
 class widget
 {
@@ -10,7 +10,7 @@ public:
     widget(/* args */);
     ~widget();
 
-    void prepare();
+    void prepare(Window context);
     void draw();
     void update();
 };

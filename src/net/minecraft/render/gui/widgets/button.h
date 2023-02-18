@@ -5,12 +5,12 @@
 class button :public widget
 {
 private:
-    /* data */
+    int x, y, width, height;
 public:
     button(int x,int y,int width,int height);
     ~button();
 
-    void prepare();
+    void prepare(Window context);
     void draw();
     void update();
 };

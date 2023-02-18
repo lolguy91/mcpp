@@ -8,7 +8,7 @@ widget::~widget()
 {
 }
 
-void widget::prepare(){
+void widget::prepare(Window context){
 }
 void widget::draw(){
 

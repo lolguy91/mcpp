@@ -4,6 +4,8 @@
 #include <spdlog/spdlog.h>
 #include "utils/shader.h"
 #include "utils/texture.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 void initGlad()
 {
@@ -23,16 +25,21 @@ unsigned int vao;
 unsigned int shader;
 } crosshairData;
 
-void CreateCrosshair(){
+void CreateCrosshair(Window context){
 Vertex crossverts[]{
-    {glm::vec2(  .5,.5) ,glm::vec2(  1,1)},
-    {glm::vec2( .5,-.5) ,glm::vec2(  1,0)},
-    {glm::vec2( -.5,-.5),glm::vec2(  0,0)},
+    {glm::vec2(200,200),glm::vec2(  1,1)},
+    {glm::vec2(200,100),glm::vec2(  1,0)},
+    {glm::vec2(100,100),glm::vec2(  0,0)},
 
-    {glm::vec2(-.5,-.5) ,glm::vec2(  0,0)},
-    {glm::vec2( -.5,.5) ,glm::vec2(  0,1)},
-    {glm::vec2(.5,.5)   ,glm::vec2(  1,1)},
+    {glm::vec2(100,100),glm::vec2(  0,0)},
+    {glm::vec2(100,200),glm::vec2(  0,1)},
+    {glm::vec2(200,200),glm::vec2(  1,1)},
 };
+
+glm::mat4 projection = glm::ortho<int>(0, context.width,context.height,0);
+glm::mat4 identity = glm::mat4(1.0);
+glm::mat4 mvp = projection * identity * identity;
+
 glGenVertexArrays(1, &crosshairData.vao);
 glBindVertexArray(crosshairData.vao);
 
@@ -53,11 +60,12 @@ ShaderProgramSource source = ParseShader("./res/shader/basic.glsl");
 crosshairData.shader = CreateShader(source.VertexSource,source.FragmentSource);
 
 Texture tex;
-tex.parse("./res/mc/icons/icon_32x32.png");
+tex.parse("./res/mc/assets/icons/icon_32x32.png");
 
 tex.bind(0);
 
 glUniform1i(glGetUniformLocation(crosshairData.shader,"u_Texture"),0);
+glUniformMatrix4fv(glGetUniformLocation(crosshairData.shader,"u_MVP"),00,false,&mvp[0][0]);
 }
 
 void renderCrosshair()

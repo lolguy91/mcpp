@@ -10,10 +10,10 @@ Test::~Test()
 {
 }
 
-void Test::prepare(){
+void Test::prepare(Window context){
 for (widget w : widgets)
 {
-    w.prepare();
+    w.prepare(context);
 }
 
 }

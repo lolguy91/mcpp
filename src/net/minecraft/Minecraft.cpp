@@ -84,8 +84,8 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     glClearColor(0,0,0,0);
 
     //initialize other stuff
-    CreateCrosshair();
-    test.prepare();
+    CreateCrosshair(window);
+    test.prepare(window);
 
     spdlog::info("Initialization done!");
 }

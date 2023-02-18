@@ -9,7 +9,7 @@ public:
     Test(/* args */);
     ~Test();
 
-    void prepare();
+    void prepare(Window context);
     void draw();
     void update();
 };
