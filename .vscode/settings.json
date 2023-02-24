@@ -83,5 +83,6 @@
         "valarray": "cpp",
         "hash_set": "cpp"
     },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "cmake.sourceDirectory": "${workspaceFolder}/lib/glad"
 }

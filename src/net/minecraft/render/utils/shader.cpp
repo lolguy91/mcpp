@@ -73,7 +73,7 @@ unsigned int CreateShader(const std::string& vertexShader, const std::string& fr
 	GLint program_linked;
 
 	glGetProgramiv(program, GL_LINK_STATUS, &program_linked);
-	//std::cout << "Program link status: " << program_linked << std::endl;
+	spdlog::info("Program link status: {}", program_linked);
 	if (program_linked != GL_TRUE)
 	{
 		GLsizei log_length = 0;

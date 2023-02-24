@@ -5,11 +5,11 @@
 #include "render/Window.h"
 #include "Minecraft.h"
 #include "render/render.h"
-#include "render/gui/test.h"
+#include "render/gui/widgets/button.h"
 
 GameConfig config;
 Window window;
-Test test;
+button test(0,0,200,40);
 bool running;
 
 void errorcallback(int error_code, const char* description){
@@ -84,7 +84,7 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     glClearColor(0,0,0,0);
 
     //initialize other stuff
-    CreateCrosshair(window);
+    //CreateCrosshair(window);
     test.prepare(window);
 
     spdlog::info("Initialization done!");
@@ -95,7 +95,7 @@ void MCupdate()
     test.update();
     test.draw();
 
-    renderCrosshair();
+    //renderCrosshair();
 
     if(glfwWindowShouldClose(window.nativeWindow))
         close();

@@ -12,6 +12,8 @@ void resizeCallback(GLFWwindow* nativeWindow, int newWidth, int newHeight)
 
 Window::Window(GLFWwindow* _nativeWindow)
 {
+	width =  640;
+	height = 480;
     nativeWindow = _nativeWindow;
     glfwSetWindowUserPointer(_nativeWindow, this);
     glfwSetWindowSizeCallback(_nativeWindow, resizeCallback);

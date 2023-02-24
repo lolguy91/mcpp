@@ -10,6 +10,7 @@
 #include <net/minecraft/render/render.h>
 
 #include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 unsigned int vao;
@@ -30,17 +31,27 @@ button::~button()
 void button::prepare(Window context){
     unsigned int vbo;
     Vertex crossverts[]{
-        {glm::vec2(x + width,y + height)    ,glm::vec2(  1,1)},
-        {glm::vec2(x + width,y)             ,glm::vec2(  1,0)},
-        {glm::vec2(x,y)                     ,glm::vec2(  0,0)},
+        {glm::vec2(x+ width ,        y)    ,glm::vec2(  0.784   ,0.742  )},//hard coded UVs lol
+        {glm::vec2(x+ width ,y+ height)    ,glm::vec2(  0.784   ,0.664  )},
+        {glm::vec2(x        ,y+ height)    ,glm::vec2(  0       ,0.664  )},
 
-        {glm::vec2(x,y)                     ,glm::vec2(  0,0)},
-        {glm::vec2(x,y + height)            ,glm::vec2(  0,1)},
-        {glm::vec2(x + width,y +height)     ,glm::vec2(  1,1)},
+        {glm::vec2(x        ,y + height)   ,glm::vec2(  0       ,0.664  )},
+        {glm::vec2(x        ,y         )   ,glm::vec2(  0       ,0.742  )},
+        {glm::vec2(x+ width ,         y)   ,glm::vec2(  0.784   ,0.742  )}
     };
-    glm::mat4 projection = glm::ortho<int>(0, context.width,context.height,0);
-    glm::mat4 identity;
-    glm::mat4 mvp = projection * identity * identity;
+    spdlog::info("btw is spdlog actually fast?");
+    spdlog::info("context.width: {} context.height: {}",context.width,context.height);
+
+    glm::mat4 projection = glm::ortho<float>(0.,(float)context.width,(float)context.height,0.0f,0.0f,10000.0f);
+    glm::mat4 identity(1.0f);
+
+    glm::mat4 mvp = identity * identity * projection;
+
+    spdlog::info("mvp: \n {} {} {} {}\n {} {} {} {}\n {} {} {} {}\n {} {} {} {}"
+    ,mvp[0][0],mvp[0][1],mvp[0][2],mvp[0][3]
+    ,mvp[1][0],mvp[1][1],mvp[1][2],mvp[1][3]
+    ,mvp[2][0],mvp[2][1],mvp[2][2],mvp[2][3]
+    ,mvp[3][0],mvp[3][1],mvp[3][2],mvp[3][3]);//debug
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -59,14 +70,17 @@ void button::prepare(Window context){
 
     ShaderProgramSource source = ParseShader("./res/shader/basic.glsl");
     shader = CreateShader(source.VertexSource,source.FragmentSource);
+    glUseProgram(shader);
 
     Texture tex;
-    tex.parse("./res/mc/assets/icons/icon_32x32.png");
+    tex.parse("./res/mc/assets/minecraft/textures/gui/widgets.png");
 
     tex.bind(0);
 
-    glUniform1i(glGetUniformLocation(shader,"u_Texture"),0);
-    glUniformMatrix4fv(glGetUniformLocation(shader,"u_MVP"),00,false,&mvp[0][0]);
+    int utexture    =   glGetUniformLocation(shader,"u_Texture");
+    int umvp        =   glGetUniformLocation(shader,"u_MVP");
+    glUniform1i(utexture,0);
+    glUniformMatrix4fv(umvp,1,GL_FALSE,glm::value_ptr(mvp));
 }
 void button::draw(){
     glUseProgram(shader);

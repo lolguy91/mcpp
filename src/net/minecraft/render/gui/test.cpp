@@ -11,23 +11,23 @@ Test::~Test()
 }
 
 void Test::prepare(Window context){
-for (widget w : widgets)
+for(auto var : widgets)
 {
-    w.prepare(context);
+    var.prepare(context);
 }
 
 }
 void Test::draw(){
-for (widget w : widgets)
+for(auto var : widgets)
 {
-    w.draw();
+    var.draw();
 }
 
 }
 void Test::update(){
-for (widget w : widgets)
+for(auto var : widgets)
 {
-    w.update();
+    var.update();
 }
 
 }
