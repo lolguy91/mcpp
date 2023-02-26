@@ -3,7 +3,7 @@
 
 Test::Test(/* args */)
 {
-    widgets.push_back(button(0,0,100,100));
+    widgets.push_back(button(0,0,100,100,false));
 }
 
 Test::~Test()

@@ -6,9 +6,9 @@ class widget
 public:
     widget();
     ~widget();
-    void prepare(Window context);
-    void draw();
-    void update();
+    virtual void prepare(Window context);
+    virtual void draw();
+    virtual void update();
 };
 
 

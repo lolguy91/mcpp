@@ -9,7 +9,8 @@
 
 GameConfig config;
 Window window;
-button test(0,0,200,40);
+button test (130,150,350,50,false);
+button test2(130,250,350,50,true);
 bool running;
 
 void errorcallback(int error_code, const char* description){
@@ -81,11 +82,12 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     //glEnable(GL_DEBUG_OUTPUT);
     glfwSetErrorCallback((GLFWerrorfun)&errorcallback);
     
-    glClearColor(0,0,0,0);
+    glClearColor(.5,.5,1,0);
 
     //initialize other stuff
     //CreateCrosshair(window);
     test.prepare(window);
+    test2.prepare(window);
 
     spdlog::info("Initialization done!");
 }
@@ -94,6 +96,9 @@ void MCupdate()
     glClear(GL_COLOR_BUFFER_BIT);
     test.update();
     test.draw();
+
+    test2.update();
+    test2.draw();
 
     //renderCrosshair();
 

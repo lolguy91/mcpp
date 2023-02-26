@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "../input/Input.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -14,9 +15,16 @@ Window::Window(GLFWwindow* _nativeWindow)
 {
 	width =  640;
 	height = 480;
-    nativeWindow = _nativeWindow;
-    glfwSetWindowUserPointer(_nativeWindow, this);
-    glfwSetWindowSizeCallback(_nativeWindow, resizeCallback);
+	nativeWindow = _nativeWindow;
+	
+	glfwSetWindowUserPointer(_nativeWindow, this);
+	glfwSetWindowSizeCallback(_nativeWindow, resizeCallback);
+
+	glfwSetMouseButtonCallback(_nativeWindow,Input::mouseButtonCallback);
+	glfwSetCursorPosCallback(_nativeWindow,Input::mouseCallback);
+	glfwSetScrollCallback(_nativeWindow,Input::mouseScrollCallback);
+	glfwSetKeyCallback(_nativeWindow,Input::keyCallback);
+
 }
 
 Window::~Window()
