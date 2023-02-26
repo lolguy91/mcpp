@@ -2,16 +2,11 @@
 #include <spdlog/spdlog.h>
 #include <stdio.h>
 
-#include "render/Window.h"
 #include "Minecraft.h"
 #include "render/render.h"
-#include "render/gui/widgets/button.h"
 
-GameConfig config;
-Window window;
-button test (130,150,350,50,false);
-button test2(130,250,350,50,true);
-bool running;
+
+Minecraft mc;
 
 void errorcallback(int error_code, const char* description){
     spdlog::error("OpenGL Error(code:{} ): {}",error_code,description);
@@ -43,22 +38,21 @@ void SetIcon(){
     iconimgs[1].pixels = pixloc2;
     iconimgs[1].height = height2;
     iconimgs[1].width  = width2;
-    glfwSetWindowIcon(window.nativeWindow,2,iconimgs);
+    glfwSetWindowIcon(mc.window.nativeWindow,2,iconimgs);
 }
 
 void updateTitle(){
     char titlechar[256];
     std::string title;
     std::string extra;
-    sprintf(titlechar,"Minecraft %s %s",config.game.launchVersion.c_str(),extra.c_str());
+    sprintf(titlechar,"Minecraft %s %s",mc.config.game.launchVersion.c_str(),extra.c_str());
 
     title = std::string(titlechar);
 
-    glfwSetWindowTitle(window.nativeWindow,title.c_str());
+    glfwSetWindowTitle(mc.window.nativeWindow,title.c_str());
 }
-void close(){
-    
-   running = false;
+void close(){ 
+   mc.running = false;
 }
 
 
@@ -67,10 +61,14 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     spdlog::set_level(spdlog::level::info);
     spdlog::info("Initializing MCPP...");
 
-    running = true;
-    //save the stuff
-    config = _config;
-    window = Window(_window);
+
+    //initialize the stuff
+    mc.running = true;
+    mc.config = _config;
+    mc.window = Window(_window);
+    mc.test  = button(130,150,350,50,false);
+    mc.test2 = button(130,250,350,50,true);
+    mc.tm = TextureManager();
 
     //set the icon and title
     SetIcon();
@@ -86,28 +84,32 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
 
     //initialize other stuff
     //CreateCrosshair(window);
-    test.prepare(window);
-    test2.prepare(window);
+    mc.test.prepare(mc.window);
+    mc.test2.prepare(mc.window);
 
     spdlog::info("Initialization done!");
 }
 void MCupdate()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    test.update();
-    test.draw();
+    mc.test.update();
+    mc.test.draw();
 
-    test2.update();
-    test2.draw();
+    mc.test2.update();
+    mc.test2.draw();
 
     //renderCrosshair();
 
-    if(glfwWindowShouldClose(window.nativeWindow))
+    if(glfwWindowShouldClose(mc.window.nativeWindow))
         close();
 }
 
 
 bool IsRunning()
 {
-    return running;
+    return mc.running;
+}
+
+Minecraft* GetMinecraft(){
+    return &mc;
 }
