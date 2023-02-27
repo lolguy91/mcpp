@@ -1,11 +1,14 @@
 #ifndef __BUTTON_H__
 #define __BUTTON_H__
 #include <net/minecraft/render/render.h>
+#include <net/minecraft/Minecraft.h>
 #include "widget.h"
+
 
 class button :public widget
 {
 private:
+    Minecraft* mc = GetMinecraft();
     unsigned int vbo;
     unsigned int vao;
     unsigned int shader;

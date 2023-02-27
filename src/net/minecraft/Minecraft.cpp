@@ -66,9 +66,6 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
     mc.running = true;
     mc.config = _config;
     mc.window = Window(_window);
-    mc.test  = button(130,150,350,50,false);
-    mc.test2 = button(130,250,350,50,true);
-    mc.tm = TextureManager();
 
     //set the icon and title
     SetIcon();
@@ -112,4 +109,10 @@ bool IsRunning()
 
 Minecraft* GetMinecraft(){
     return &mc;
+}
+
+Minecraft::Minecraft():
+test(130,150,350,50,false),
+test2(130,250,350,50,true){
+   
 }

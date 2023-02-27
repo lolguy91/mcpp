@@ -1,18 +1,11 @@
 #include "button.h"
 #include "../../../input/Input.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <spdlog/spdlog.h>
 
 #include <net/minecraft/render/utils/shader.h>
 #include <net/minecraft/render/utils/texture.h>
 
-
-#include "glm/glm.hpp"
-#include "glm/gtc/type_ptr.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 glm::vec2 unpresseduvs[6] = {
     glm::vec2(0.784   ,0.742  ),//hard coded UVs lol
@@ -109,14 +102,9 @@ void button::prepare(Window context){
     shader = CreateShader(source.VertexSource,source.FragmentSource);
     glUseProgram(shader);
 
-    Texture tex;
-    tex.parse("./res/mc/assets/minecraft/textures/gui/widgets.png");
-
-    tex.bind(0);
-
     int utexture    =   glGetUniformLocation(shader,"u_Texture");
     int umvp        =   glGetUniformLocation(shader,"u_MVP");
-    glUniform1i(utexture,0);
+    glUniform1i(utexture,mc->tm.WIDGETS);
     glUniformMatrix4fv(umvp,1,GL_FALSE,glm::value_ptr(mvp));
 }
 void button::draw(){

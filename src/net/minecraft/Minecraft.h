@@ -1,10 +1,9 @@
 #ifndef __MINECRAFT_H__
 #define __MINECRAFT_H__
-#include <GLFW/glfw3.h>
 #include "GameConfig.h"
 #include "render/Window.h"
+#include "render/TextureManager.h"
 #include "render/gui/widgets/button.h"
-#include "TextureManager.h"
 
 struct Minecraft
 {
@@ -14,6 +13,7 @@ struct Minecraft
     button test;
     button test2;
     bool running;
+    Minecraft();
 };
 
 bool IsRunning();

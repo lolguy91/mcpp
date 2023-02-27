@@ -4,8 +4,9 @@
 class TextureManager
 {
 public:
-    unsigned int FONT_ASCII;
-    unsigned int FONT_UNICODE;
+    int WIDGETS         = 0;
+    int FONT_ASCII      = 1;
+    int FONT_UNICODE    = 2;
 
     TextureManager(/* args */);
     ~TextureManager();

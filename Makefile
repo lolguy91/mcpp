@@ -23,7 +23,7 @@ libs:
 dirs:
 	mkdir -p ./$(BIN)
 
-run: all
+run: game
 	$(BIN)/game
 
 game: $(OBJ)
