@@ -1,8 +1,10 @@
 #ifndef __WIDGET_H__
 #define __WIDGET_H__
 #include <net/minecraft/render/Window.h>
+#include <net/minecraft/Minecraft.h>
 class widget
 {
+    Minecraft* mc = GetMinecraft();
 public:
     widget();
     ~widget();
