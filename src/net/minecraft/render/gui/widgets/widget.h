@@ -4,8 +4,8 @@
 #include <net/minecraft/Minecraft.h>
 class widget
 {
-    Minecraft* mc = GetMinecraft();
 public:
+    Minecraft* mc = GetMinecraft();
     widget();
     ~widget();
     virtual void prepare(Window context);

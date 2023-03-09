@@ -4,9 +4,13 @@
 
 #include "Minecraft.h"
 #include "render/render.h"
+#include "render/gui/widgets/button.h"
+
 
 
 Minecraft mc;
+button test(130,150,350,50,false);
+button test2(130,250,350,50,true);
 
 void errorcallback(int error_code, const char* description){
     spdlog::error("OpenGL Error(code:{} ): {}",error_code,description);
@@ -81,19 +85,19 @@ void MCinit(GameConfig _config,GLFWwindow * _window)
 
     //initialize other stuff
     //CreateCrosshair(window);
-    mc.test.prepare(mc.window);
-    mc.test2.prepare(mc.window);
+    test.prepare(mc.window);
+    test2.prepare(mc.window);
 
     spdlog::info("Initialization done!");
 }
 void MCupdate()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    mc.test.update();
-    mc.test.draw();
+    test.update();
+    test.draw();
 
-    mc.test2.update();
-    mc.test2.draw();
+    test2.update();
+    test2.draw();
 
     //renderCrosshair();
 
@@ -111,8 +115,3 @@ Minecraft* GetMinecraft(){
     return &mc;
 }
 
-Minecraft::Minecraft():
-test(130,150,350,50,false),
-test2(130,250,350,50,true){
-   
-}
